@@ -1,0 +1,55 @@
+/**
+ * 全局 z-index 样式
+ * 确保 Element Plus 组件的层级正确
+ */
+
+/* ElMessageBox 确认弹窗样式 - 需要比条款弹窗更高的层级 */
+/* 使用多重选择器提高优先级 */
+body .el-overlay.is-message-box,
+html .el-overlay.is-message-box,
+.el-overlay.is-message-box[style] {
+  z-index: 5010 !important;
+}
+
+body .el-message-box,
+html .el-message-box,
+.el-message-box[style] {
+  z-index: 5011 !important;
+}
+
+body .el-message-box__wrapper,
+html .el-message-box__wrapper,
+.el-message-box__wrapper[style] {
+  z-index: 5011 !important;
+}
+
+/* 针对内联样式的覆盖 */
+.el-overlay.is-message-box[style*="z-index"] {
+  z-index: 5010 !important;
+}
+
+/* 确保条款弹窗的层级 */
+.el-overlay:not(.is-message-box) {
+  z-index: 5003 !important;
+}
+
+.el-dialog {
+  z-index: 5003 !important;
+}
+
+.el-dialog__wrapper {
+  z-index: 5002 !important;
+}
+
+/* 防止其他弹窗干扰 */
+.el-loading-mask {
+  z-index: 2000 !important;
+}
+
+.el-message {
+  z-index: 3000 !important;
+}
+
+.el-notification {
+  z-index: 4000 !important;
+}

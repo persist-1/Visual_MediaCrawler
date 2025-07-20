@@ -1,0 +1,26 @@
+{
+  "name": "visual_mediacrawler",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 10002 --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "axios": "^1.10.0",
+    "bootstrap": "^5.3.7",
+    "echarts": "^5.6.0",
+    "element-plus": "^2.9.10",
+    "pinia": "^3.0.2",
+    "tailwindcss": "^4.1.11",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "vite": "^6.3.5"
+  }
+}
