@@ -21,7 +21,7 @@ export default {
 /* 引入FontAwesome图标 */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
 /* 引入阿里巴巴图标库 */
-@import url('//at.alicdn.com/t/c/font_4980514_84u95jblm1l.css');
+@import url('//at.alicdn.com/t/c/font_4980514_4uu8cudsbu.css');
 
 * {
   margin: 0;

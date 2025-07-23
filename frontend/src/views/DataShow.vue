@@ -181,15 +181,17 @@
           </el-table>
 
           <!-- 分页 -->
-          <div class="d-flex justify-content-center mt-4">
+          <div class="pagination-container mt-4">
             <el-pagination
               v-model:current-page="currentPage"
               v-model:page-size="pageSize"
               :page-sizes="[30, 60, 100]"
               :total="totalCount"
-              layout="total, sizes, prev, pager, next, jumper"
+              :layout="paginationLayout"
+              :small="isMobile"
               @size-change="onPageSizeChange"
               @current-change="onPageChange"
+              class="responsive-pagination"
             />
           </div>
         </div>
@@ -263,7 +265,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Refresh, ArrowDown } from '@element-plus/icons-vue'
 import { useDataStore } from '../stores/data'
@@ -283,6 +285,33 @@ const taskIdFilter = ref('')
 const showTaskSelectorDialog = ref(false)
 const availableTasks = ref([])
 const loadingTasks = ref(false)
+
+// 移动端检测
+const isMobile = ref(false)
+const isTablet = ref(false)
+
+// 检测屏幕尺寸
+const checkScreenSize = () => {
+  const width = window.innerWidth
+  isMobile.value = width <= 768
+  isTablet.value = width > 768 && width <= 1024
+}
+
+// 监听窗口大小变化
+const handleResize = () => {
+  checkScreenSize()
+}
+
+// 响应式分页布局
+const paginationLayout = computed(() => {
+  if (isMobile.value) {
+    return 'prev, pager, next'
+  } else if (isTablet.value) {
+    return 'total, prev, pager, next'
+  } else {
+    return 'total, sizes, prev, pager, next, jumper'
+  }
+})
 
 // 计算属性
 const loading = computed(() => dataStore.loading)
@@ -465,7 +494,16 @@ const getCrawlerTypeName = (type) => {
 
 // 生命周期
 onMounted(async () => {
+  // 初始化屏幕尺寸检测
+  checkScreenSize()
+  window.addEventListener('resize', handleResize)
+  
   await dataStore.loadAvailableTables(selectedDataSource.value)
+})
+
+// 页面卸载时清理事件监听器
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
 })
 
 // 监听表格选择变化
@@ -668,5 +706,126 @@ defineExpose({
 
 :deep(.el-pagination) {
   justify-content: center;
+}
+
+/* 分页容器响应式样式 */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.responsive-pagination {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* 移动端分页样式优化 */
+@media (max-width: 768px) {
+  .pagination-container {
+    padding: 1rem 0;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+  
+  :deep(.el-pagination) {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  :deep(.el-pagination .el-pager) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+  
+  :deep(.el-pagination .el-pager li) {
+    min-width: 32px;
+    height: 32px;
+    line-height: 30px;
+    font-size: 14px;
+    margin: 0 2px;
+  }
+  
+  :deep(.el-pagination .btn-prev),
+  :deep(.el-pagination .btn-next) {
+    min-width: 32px;
+    height: 32px;
+    line-height: 30px;
+    font-size: 14px;
+  }
+  
+  :deep(.el-pagination .el-pagination__total) {
+    font-size: 12px;
+    margin-right: 8px;
+  }
+  
+  :deep(.el-pagination .el-pagination__sizes) {
+    margin: 0 8px;
+  }
+  
+  :deep(.el-pagination .el-pagination__jump) {
+    margin-left: 8px;
+    font-size: 12px;
+  }
+}
+
+/* 平板端分页样式 */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .pagination-container {
+    padding: 0.75rem 0;
+  }
+  
+  :deep(.el-pagination .el-pager li) {
+    min-width: 36px;
+    height: 36px;
+    line-height: 34px;
+  }
+  
+  :deep(.el-pagination .btn-prev),
+  :deep(.el-pagination .btn-next) {
+    min-width: 36px;
+    height: 36px;
+    line-height: 34px;
+  }
+}
+
+/* 小屏幕手机端优化 */
+@media (max-width: 480px) {
+  .pagination-container {
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+  }
+  
+  :deep(.el-pagination) {
+    font-size: 12px;
+  }
+  
+  :deep(.el-pagination .el-pager li) {
+    min-width: 28px;
+    height: 28px;
+    line-height: 26px;
+    font-size: 12px;
+    margin: 0 1px;
+  }
+  
+  :deep(.el-pagination .btn-prev),
+  :deep(.el-pagination .btn-next) {
+    min-width: 28px;
+    height: 28px;
+    line-height: 26px;
+    font-size: 12px;
+  }
+  
+  :deep(.el-pagination .el-pagination__total) {
+    display: none; /* 在极小屏幕上隐藏总数显示 */
+  }
 }
 </style>

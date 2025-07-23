@@ -12,6 +12,9 @@ hero:
     # 打包时路径为images，不再使用public/images，不知道为什么index页面和其它md页面的打包逻辑不一样...
   actions:
     - theme: brand
+      text: 项目仓库
+      link: https://github.com/persist-1/Visual_MediaCrawler
+    - theme: brand
       text: 使用说明
       link: /1.使用说明
     - theme: brand

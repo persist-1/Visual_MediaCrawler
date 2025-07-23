@@ -6,18 +6,38 @@
         <div class="nav-brand">
           <h2>Visual_MediaCrawler</h2>
         </div>
-        <div class="nav-links">
+        
+        <!-- 移动端右侧按钮组 -->
+        <div class="mobile-nav-actions">
+          <!-- GitHub按钮 (仅在移动端显示图标) -->
+          <a 
+            href="https://github.com/persist-1/Visual_MediaCrawler" 
+            target="_blank" 
+            class="mobile-github-btn"
+          >
+            <i class="iconfont icon-GitHub"></i>
+          </a>
+          
+          <!-- 汉堡菜单按钮 (仅在移动端显示) -->
+          <button class="mobile-menu-toggle" @click="toggleMobileMenu" :class="{ active: isMobileMenuOpen }">
+            <i class="iconfont icon-caidanlan-kucun-kucunchanpinliebiao"></i>
+          </button>
+        </div>
+        
+        <!-- 导航链接 -->
+        <div class="nav-links" :class="{ 'mobile-open': isMobileMenuOpen }">
           <a href="#features" @click="scrollToSection('features')">主要特性</a>
           <a href="#platforms" @click="scrollToSection('platforms')">支持平台</a>
           <a href="#stats" @click="scrollToSection('stats')">平台数据</a>
+          <a href="#docs" @click="scrollToSection('docs')">在线文档</a>
           <a href="#cta" @click="scrollToSection('cta')">立即体验</a>
           <a 
-            href="https://github.com/NanmiCoder/MediaCrawler" 
+            href="https://github.com/persist-1/Visual_MediaCrawler" 
             target="_blank" 
-            class="btn btn-primary"
+            class="btn btn-primary desktop-github-btn"
           >
             📖 GitHub
-            <span class="github-stars" v-if="githubStars"> ⭐{{ githubStars }}</span> <!--class="github-link" 对应另一种样式-->
+            <span class="github-stars" v-if="githubStars"> ⭐{{ githubStars }}</span>
           </a>
         </div>
       </div>
@@ -35,7 +55,7 @@
           <button @click="handleDashboardNavigation" class="btn btn-primary btn-large">
             🚀 立即开始
           </button>
-          <a href="https://github.com/NanmiCoder/MediaCrawler" target="_blank" class="btn btn-primary">
+          <a href="https://github.com/persist-1/Visual_MediaCrawler" target="_blank" class="btn btn-primary">
            📖 查看源码  <span class="github-stars" v-if="githubStars"> ⭐{{ githubStars }}</span> 
           </a>
         </div>
@@ -181,6 +201,110 @@
       </div>
     </section>
 
+    <!-- 在线文档区域 -->
+    <section id="docs" class="docs">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">在线文档</h2>
+          <p class="section-subtitle">
+            查看详细的项目文档和使用指南
+          </p>
+        </div>
+        <div class="docs-content">
+          <div class="docs-grid">
+            <!-- WebView 文档预览 -->
+            <div class="docs-preview">
+              <div class="docs-preview-header">
+                <h3>📖 文档预览</h3>
+                <a 
+                  href="https://persist-1.github.io/Visual_MediaCrawler/" 
+                  target="_blank" 
+                  class="btn btn-outline btn-small"
+                >
+                  <i class="fas fa-external-link-alt me-1"></i>
+                  在新窗口打开
+                </a>
+              </div>
+              <div class="docs-iframe-container">
+                <iframe 
+                  src="https://persist-1.github.io/Visual_MediaCrawler/"
+                  class="docs-iframe"
+                  frameborder="0"
+                  loading="lazy"
+                ></iframe>
+              </div>
+            </div>
+            
+            <!-- 快速链接 -->
+            <div class="docs-links">
+              <h3>📚 快速导航</h3>
+              <div class="docs-link-list">
+                <a 
+                  href="https://persist-1.github.io/Visual_MediaCrawler/" 
+                  target="_blank" 
+                  class="docs-link-item"
+                >
+                  <div class="docs-link-icon">
+                    <i class="fas fa-home"></i>
+                  </div>
+                  <div class="docs-link-content">
+                    <h4>项目首页</h4>
+                    <p>查看项目概述和特性介绍</p>
+                  </div>
+                  <i class="fas fa-chevron-right"></i>
+                </a>
+                
+                <a 
+                  href="https://persist-1.github.io/Visual_MediaCrawler/" 
+                  target="_blank" 
+                  class="docs-link-item"
+                >
+                  <div class="docs-link-icon">
+                    <i class="fas fa-rocket"></i>
+                  </div>
+                  <div class="docs-link-content">
+                    <h4>快速开始</h4>
+                    <p>了解如何快速部署和使用</p>
+                  </div>
+                  <i class="fas fa-chevron-right"></i>
+                </a>
+                
+                <a 
+                  href="https://persist-1.github.io/Visual_MediaCrawler/" 
+                  target="_blank" 
+                  class="docs-link-item"
+                >
+                  <div class="docs-link-icon">
+                    <i class="fas fa-cog"></i>
+                  </div>
+                  <div class="docs-link-content">
+                    <h4>配置说明</h4>
+                    <p>详细的配置参数和选项</p>
+                  </div>
+                  <i class="fas fa-chevron-right"></i>
+                </a>
+                
+                <a 
+                  href="https://persist-1.github.io/Visual_MediaCrawler/" 
+                  target="_blank" 
+                  class="docs-link-item"
+                >
+                  <div class="docs-link-icon">
+                    <i class="fas fa-question-circle"></i>
+                  </div>
+                  <div class="docs-link-content">
+                    <h4>常见问题</h4>
+                    <p>FAQ 和故障排除指南</p>
+                  </div>
+                  <i class="fas fa-chevron-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- CTA区域 -->
     <section id="cta" class="cta">
       <div class="container">
@@ -247,7 +371,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTermsStore } from '@/stores/terms'
 import { ElMessage, ElDialog, ElButton, ElAlert } from 'element-plus'
@@ -260,6 +384,19 @@ const githubStars = ref('')
 // 条款弹窗相关
 const showTermsDialog = ref(false)
 const currentTermIndex = ref(0)
+
+// 移动端菜单状态
+const isMobileMenuOpen = ref(false)
+
+// 切换移动端菜单
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+// 关闭移动端菜单
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+}
 
 // 计算属性
 const allTermsAccepted = computed(() => termsStore.allTermsAccepted)
@@ -388,6 +525,17 @@ const scrollToSection = (sectionId) => {
       block: 'start'
     })
   }
+  // 滚动后关闭移动端菜单
+  closeMobileMenu()
+}
+
+// 点击外部区域关闭移动端菜单
+const handleClickOutside = (event) => {
+  const navbar = document.querySelector('.navbar')
+  
+  if (isMobileMenuOpen.value && navbar && !navbar.contains(event.target)) {
+    closeMobileMenu()
+  }
 }
 
 // 页面加载完成后获取stars数量
@@ -406,7 +554,18 @@ onMounted(() => {
     } else {
       navbar.style.boxShadow = 'none'
     }
+    
+    // 滚动时关闭移动端菜单
+    closeMobileMenu()
   })
+  
+  // 添加点击外部区域关闭菜单的事件监听
+  document.addEventListener('click', handleClickOutside)
+})
+
+// 组件卸载时清理事件监听器
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -467,7 +626,72 @@ onMounted(() => {
   font-weight: 700;
   color: var(--text-primary);
 }
+/* 移动端按钮组样式 */
+.mobile-nav-actions {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
 
+/* 移动端GitHub按钮样式 */
+.mobile-github-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.mobile-github-btn:hover {
+  background: var(--primary-dark);
+  transform: scale(1.05);
+}
+
+.mobile-github-btn i {
+  font-size: 18px;
+  color: white;
+}
+
+/* 汉堡菜单按钮 */
+.mobile-menu-toggle {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1001;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.mobile-menu-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.mobile-menu-toggle i {
+  font-size: 20px;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle.active i {
+  transform: rotate(90deg);
+}
+
+/* 桌面端GitHub按钮 */
+.desktop-github-btn {
+  display: inline-flex;
+}
+
+/* 导航栏链接样式 */
 .nav-links {
   display: flex;
   gap: 2rem;
@@ -592,7 +816,7 @@ onMounted(() => {
 
 .btn-outline:hover {
   background: var(--primary);
-  color: white;
+  color: rgb(130, 24, 216); /** 鼠标悬停时 改变在线文档打开链接按钮 文字颜色 */
   border-color: var(--primary);
   transform: translateY(-2px);
 }
@@ -784,6 +1008,142 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 
+/* 在线文档区域 */
+.docs {
+  padding: 80px 0;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.docs-content {
+  margin-top: 3rem;
+}
+
+.docs-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.docs-preview {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.docs-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.docs-preview-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.docs-iframe-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+}
+
+.docs-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: white;
+}
+
+.docs-links {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.docs-links h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.docs-link-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.docs-link-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.docs-link-item:hover {
+  background: var(--primary);
+  color: rgb(99, 92, 92); /** 鼠标悬停时 改变在线文档指示标题 颜色 */
+  border-color: var(--primary);
+  transform: translateX(5px);
+}
+
+.docs-link-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--primary);
+  transition: all 0.2s ease;
+}
+
+.docs-link-item:hover .docs-link-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgb(100, 5, 104); /** 鼠标悬停时 改变在线文档图标 颜色 */
+}
+
+.docs-link-content {
+  flex: 1;
+}
+
+.docs-link-content h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.docs-link-content p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+}
+
+.docs-link-item:hover .docs-link-content p {
+  color: rgba(236, 21, 201, 0.8); /** 鼠标悬停时 改变在线文档指示文本 颜色 */
+}
+
 /* CTA区域 */
 .cta {
   padding: 80px 0;
@@ -815,9 +1175,127 @@ onMounted(() => {
 
 
 /* 响应式设计 */
+@media (max-width: 1024px) {
+  .nav-container {
+    gap: 2rem;
+  }
+  
+  .nav-links {
+    gap: 1.2rem;
+  }
+  
+  /* 平板设备GitHub按钮优化 */
+  .nav-links .btn.btn-primary {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .nav-links .github-stars {
+    font-size: 0.8rem;
+  }
+  
+  .docs-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .docs-iframe-container {
+    height: 400px;
+  }
+}
+
 @media (max-width: 768px) {
+  .navbar {
+    padding: 0.75rem 0;
+  }
+  
+  .nav-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .nav-brand h2 {
+    font-size: 1.25rem;
+  }
+  
+  /* 显示移动端按钮组 */
+  .mobile-nav-actions {
+    display: flex;
+  }
+  
+  /* 显示移动端GitHub按钮 */
+  .mobile-github-btn {
+    display: flex;
+  }
+  
+  /* 显示汉堡菜单按钮 */
+  .mobile-menu-toggle {
+    display: flex;
+  }
+  
+  /* 隐藏桌面端GitHub按钮 */
+  .desktop-github-btn {
+    display: none;
+  }
+  
+  /* 在移动端隐藏导航链接 */
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    gap: 0;
+    padding: 1rem 0;
+    z-index: 1000;
+  }
+  
+  .nav-links.mobile-open {
+    display: flex;
+  }
+  
+  .nav-links a {
+    padding: 1rem 2rem;
+    border-radius: 0;
+    background: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    width: 100%;
+    text-align: left;
+    font-size: 1rem;
+  }
+  
+  .nav-links a:hover {
+    background: rgba(37, 99, 235, 0.05);
+  }
+  
+  /* 移动端GitHub按钮样式 */
+  .nav-links .github-link {
+    margin: 0.5rem 2rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    width: auto;
+    text-align: center;
+  }
+  
+  .nav-links .github-stars {
+    font-size: 0.8rem;
+  }
+  
   .hero {
-    padding: 60px 0;
+    padding: 100px 0 60px;
+  }
+  
+  .hero-container {
+    padding: 0 1rem;
   }
   
   .hero-title {
@@ -828,8 +1306,12 @@ onMounted(() => {
     font-size: 1.1rem;
   }
   
-  .features, .platforms, .cta {
+  .features, .platforms, .cta, .docs {
     padding: 60px 0;
+  }
+  
+  .container {
+    padding: 0 1rem;
   }
   
   .section-title {
@@ -845,6 +1327,60 @@ onMounted(() => {
     width: 100%;
     max-width: 300px;
     justify-content: center;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .platforms-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .docs-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .docs-preview-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+  
+  .docs-iframe-container {
+    height: 300px;
+  }
+  
+  .docs-links {
+    padding: 1.5rem;
+  }
+  
+  .docs-link-item {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+  
+  .docs-link-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+  
+  .docs-link-content h4 {
+    font-size: 0.9rem;
+  }
+  
+  .docs-link-content p {
+    font-size: 0.8rem;
   }
   
   .modal-content {
@@ -865,6 +1401,57 @@ onMounted(() => {
   .modal-footer .btn {
     width: 100%;
     min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-links a {
+    font-size: 0.9rem;
+    padding: 0.875rem 1.5rem;
+  }
+  
+  .nav-links .github-link {
+    margin: 0.5rem 1.5rem;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8rem;
+  }
+  
+  .nav-links .github-stars {
+    font-size: 0.7rem;
+  }
+  
+  .hero-title {
+    font-size: 1.75rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .platforms-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .docs-iframe-container {
+    height: 250px;
+  }
+  
+  .docs-link-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .docs-link-item:hover {
+    transform: none;
   }
 }
 
