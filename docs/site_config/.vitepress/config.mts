@@ -5,7 +5,17 @@ export default defineConfig({
   title: "Visual_MediaCrawler",
   description: "可视化爬虫（支持：哔哩哔哩 | 抖音 | 小红书 | 贴吧 | 微博 | 知乎 | 快手），异步、高效、直观地采集国内主流平台的媒体数据的前后端一体项目（Based on \"MediaCrawler\"）。",
   base: '/Visual_MediaCrawler/',
+
+  head: [
+      // 添加图标
+      ['link', { rel: 'icon', type: 'image/svg+xml', href: '/Visual_MediaCrawler/static/images/logo.svg' }]
+    ],
+
   themeConfig: {
+
+    logo: '/Visual_MediaCrawler/static/images/logo.svg',
+    siteTitle: 'Visual_MediaCrawler | 项目文档',
+
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: '项目文档', link: '/README' },
@@ -28,10 +38,17 @@ export default defineConfig({
           { text: '源项目README', link: '/Origin_README' },
         ]
       }
+  
     ],
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/persist-1/Visual_MediaCrawler' }
-    ]
+    ],
+
+    // 站点页脚配置
+    footer: {
+      message: "Released under the 'NON-COMMERCIAL LEARNING LICENSE 1.1' License",
+      copyright: "Copyright © 2025-present persist-1",
+    },
   }
 })
