@@ -36,7 +36,7 @@
 
 声明：本项目改动部分的代码，70%+通过AI编程实现，其中存在未完全Review的部分，若在使用中出现问题请提交ISSUES，开发者会积极解决
 
-- **项目前端页面预览地址** [https://visual-mediacrawler.pages.dev/](https://visual-mediacrawler.pages.dev/)
+- **项目前端页面预览地址** [https://visual-mediacrawler-frontend.pages.dev/](https://visual-mediacrawler-frontend.pages.dev/)
 
 - **项目在线文档地址** [https://persist-1.github.io/Visual_MediaCrawler/](https://persist-1.github.io/Visual_MediaCrawler/)
 
