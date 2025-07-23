@@ -1,6 +1,28 @@
 <template>
   <div class="data-show-container">
     <div class="container-fluid p-4">
+      <!-- 数据源选择 -->
+      <div class="modern-card p-4 mb-4">
+        <div class="row align-items-center">
+          <div class="col-md-12">
+            <label class="form-label mb-2">
+              <i class="fas fa-database me-1"></i>
+              数据源选择
+            </label>
+            <el-radio-group v-model="selectedDataSource" @change="onDataSourceChange" class="data-source-group">
+              <el-radio value="sqlite" class="data-source-option">
+                <i class="fas fa-file-alt me-2"></i>
+                查询SQLite数据库
+              </el-radio>
+              <el-radio value="mysql" class="data-source-option">
+                <i class="fas fa-database me-2"></i>
+                查询MySQL数据库
+              </el-radio>
+            </el-radio-group>
+          </div>
+        </div>
+      </div>
+
       <!-- 数据表选择和控制 -->
       <div class="modern-card p-4 mb-4">
         <div class="row align-items-center mb-3">
@@ -253,6 +275,7 @@ const dataStore = useDataStore()
 const crawlerStore = useCrawlerStore()
 
 // 响应式数据
+const selectedDataSource = ref('sqlite')
 const selectedTable = ref('')
 const currentPage = ref(1)
 const pageSize = ref(30)
@@ -297,11 +320,23 @@ const loadTableData = async () => {
       table: selectedTable.value,
       page: currentPage.value,
       pageSize: pageSize.value,
-      taskId: taskIdFilter.value || undefined
+      taskId: taskIdFilter.value || undefined,
+      dataSource: selectedDataSource.value
     })
   } catch (error) {
     ElMessage.error('加载数据失败: ' + error.message)
   }
+}
+
+// 数据源切换方法
+const onDataSourceChange = async () => {
+  // 清空当前选择的表格
+  selectedTable.value = ''
+  // 重新加载可用表格列表
+  await dataStore.loadAvailableTables(selectedDataSource.value)
+  // 清空当前数据
+  dataStore.clearTableData()
+  ElMessage.success(`已切换到${selectedDataSource.value === 'sqlite' ? 'SQLite' : 'MySQL'}数据源`)
 }
 
 // 处理导出命令
@@ -318,10 +353,10 @@ const exportData = async (format = 'csv') => {
   
   try {
     if (format === 'csv') {
-      await dataStore.exportTableData(selectedTable.value, taskIdFilter.value)
+      await dataStore.exportTableData(selectedTable.value, taskIdFilter.value, selectedDataSource.value)
       ElMessage.success('CSV数据导出成功')
     } else if (format === 'json') {
-      await dataStore.exportTableDataAsJSON(selectedTable.value, taskIdFilter.value)
+      await dataStore.exportTableDataAsJSON(selectedTable.value, taskIdFilter.value, selectedDataSource.value)
       ElMessage.success('JSON数据导出成功')
     }
   } catch (error) {
@@ -346,7 +381,8 @@ const showTaskSelector = async () => {
   showTaskSelectorDialog.value = true
   
   try {
-    await crawlerStore.getAllTasks()
+    // 根据当前选择的数据源获取对应的任务列表
+    await crawlerStore.getAllTasks(selectedDataSource.value)
     availableTasks.value = crawlerStore.tasks
   } catch (error) {
     ElMessage.error('加载任务列表失败: ' + error.message)
@@ -429,7 +465,7 @@ const getCrawlerTypeName = (type) => {
 
 // 生命周期
 onMounted(async () => {
-  await dataStore.loadAvailableTables()
+  await dataStore.loadAvailableTables(selectedDataSource.value)
 })
 
 // 监听表格选择变化
@@ -449,6 +485,7 @@ defineExpose({
   selectTask,
   clearTaskFilter,
   onTaskIdInput,
+  onDataSourceChange,
   getTableDisplayName,
   formatTime,
   getTaskStatusClass,
@@ -460,6 +497,33 @@ defineExpose({
 </script>
 
 <style scoped>
+/* 数据源选择样式 */
+.data-source-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.data-source-option {
+  padding: 12px 16px;
+  border: 2px solid #e4e7ed;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: #fff;
+  min-width: 200px;
+}
+
+.data-source-option:hover {
+  border-color: #409eff;
+  background: #f0f9ff;
+}
+
+.data-source-option.is-checked {
+  border-color: #409eff;
+  background: #e6f7ff;
+  color: #409eff;
+}
+
 /* 筛选状态样式 */
 .filter-status {
   display: flex;
@@ -556,7 +620,7 @@ defineExpose({
 }
 .data-show-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #f48fb1 0%, #ff8a65 15%, #ffffff 25%, #ffffff 70%, #f8b5a0 85%, #ffb4cd 100%); /** 数据展示页面容器组件背景 */
 }
 
 .status-bar {

@@ -26,7 +26,7 @@ from .weibo_store_impl import *
 class WeibostoreFactory:
     STORES = {
         "csv": WeiboCsvStoreImplement,
-        "db": WeiboHybridDbStoreImplement,
+        "db": WeiboDbStoreImplement,
         "json": WeiboJsonStoreImplement,
     }
 

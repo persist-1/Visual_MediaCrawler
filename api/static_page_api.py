@@ -100,7 +100,7 @@ class StaticPageAPI:
                 print(f"已挂载静态资源目录: /assets -> {assets_path}")
             
             # 挂载其他静态文件（如favicon、图标等）
-            for static_file in ["vite.svg", "favicon.ico", "favicon.png"]:
+            for static_file in ["logo.svg", "favicon.ico", "favicon.png"]:
                 file_path = self.frontend_dist_path / static_file
                 if file_path.exists():
                     @self.app.get(f"/{static_file}")
@@ -118,19 +118,11 @@ class StaticPageAPI:
         try:
             index_file = self.frontend_dist_path / "index.html"
             
-            # 根路径返回index.html
-            @self.app.get("/", response_class=HTMLResponse, include_in_schema=False)
-            async def serve_frontend_root():
-                """服务前端根页面"""
-                return FileResponse(index_file)
-            
             # 为前端路由提供SPA支持
             # 这些路径应该返回index.html，让前端路由器处理
             frontend_routes = [
-                "/crawler",
-                "/data",
-                "/settings",
-                "/about"
+                "/intro",
+                "/dashboard"
             ]
             
             # 为每个前端路由创建处理函数
@@ -143,7 +135,7 @@ class StaticPageAPI:
             for route in frontend_routes:
                 # 注册精确路径
                 self.app.get(route, response_class=HTMLResponse, include_in_schema=False)(create_spa_handler(index_file))
-                # 注册子路径
+                # 注册子路径（包括多级路径）
                 self.app.get(f"{route}/{{path:path}}", response_class=HTMLResponse, include_in_schema=False)(create_spa_handler(index_file))
             
             print("已配置SPA路由支持")
@@ -246,5 +238,33 @@ def create_integrated_app(api_app: FastAPI, frontend_dist_path: Optional[str] = 
         allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allow_headers=["*"]
     )
+    
+    # 在所有API路由注册完成后，添加根路径和fallback路由
+    if static_api.frontend_available:
+        index_file = static_api.frontend_dist_path / "index.html"
+        
+        # 根路径返回index.html
+        @api_app.get("/", response_class=HTMLResponse, include_in_schema=False)
+        async def serve_frontend_root():
+            """服务前端根页面"""
+            return FileResponse(index_file)
+        
+        # 添加通用的SPA路由处理器（作为最后的fallback）
+        # 这将捕获所有不匹配API路由和静态资源的请求
+        @api_app.get("/{path:path}", response_class=HTMLResponse, include_in_schema=False)
+        async def serve_spa_fallback(path: str):
+            """SPA fallback路由 - 处理所有未匹配的路径"""
+            # 排除API路径和静态资源路径
+            if (path.startswith("api/") or 
+                path.startswith("assets/") or 
+                path.startswith("static/") or
+                path.startswith("docs") or
+                path.startswith("openapi.json") or
+                path.startswith("redoc")):
+                from fastapi import HTTPException
+                raise HTTPException(status_code=404, detail="Not Found")
+            return FileResponse(index_file)
+        
+        print("已添加根路径和SPA fallback路由")
     
     return api_app

@@ -74,14 +74,11 @@ BROWSER_LAUNCH_TIMEOUT = 30
 # 设置为False可以保持浏览器运行，便于调试
 AUTO_CLOSE_BROWSER = True
 
-# 数据保存类型选项配置,支持三种类型：csv、db、json, 最好保存到DB，有排重的功能。
+# 数据保存类型选项配置,支持三种类型：csv、db、json, 最好保存到DB，有排重的功能。 （for cmd）
 SAVE_DATA_OPTION = "db"  # csv or db or json
 
 # 数据库类型配置，支持mysql和sqlite
 DB_TYPE = "sqlite"  # mysql or sqlite
-
-# 是否同步保存至MySQL数据库
-SYNC_TO_MYSQL = False
 
 # 用户浏览器缓存的浏览器文件配置
 USER_DATA_DIR = "%s_user_data_dir"  # %s will be replaced by platform name
@@ -105,7 +102,7 @@ ENABLE_GET_COMMENTS = True
 CRAWLER_MAX_COMMENTS_COUNT_SINGLENOTES = 10
 
 # 是否开启爬二级评论模式, 默认不开启爬二级评论
-# 老版本项目使用了 db, 则需参考 schema/tables.sql line 287 增加表字段
+# 老版本项目使用了 db, 则需参考 schema/mysql_tables.sql line 287 增加表字段
 ENABLE_GET_SUB_COMMENTS = False
 
 # 已废弃⚠️⚠️⚠️指定小红书需要爬虫的笔记ID列表
@@ -213,11 +210,7 @@ CUSTOM_WORDS = {
     "高频词": "专业术语",  # 示例自定义词
 }
 
-# 停用(禁用)词文件路径
-STOP_WORDS_FILE = "./docs/hit_stopwords.txt"
 
-# 中文字体文件路径
-FONT_PATH = "./docs/STZHONGS.TTF"
 
 # 爬取开始的天数，仅支持 bilibili 关键字搜索，YYYY-MM-DD 格式，若为 None 则表示不设置时间范围，按照默认关键字最多返回 1000 条视频的结果处理
 START_DAY = "2024-01-01"
@@ -245,3 +238,11 @@ CRAWLER_MAX_DYNAMICS_COUNT_SINGLENOTES = 50
 
 # 任务ID配置，用于跟踪爬取的数据
 TASK_ID = None
+
+#################################################################
+# 停用(禁用)词文件路径
+STOP_WORDS_FILE = "./config/hit_stopwords.txt"
+
+# 中文字体文件路径
+FONT_PATH = "./config/STZHONGS.TTF"
+#################################################################

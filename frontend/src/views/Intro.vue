@@ -51,7 +51,7 @@
             基于知名开源项目
                 <a href="https://github.com/NanmiCoder/MediaCrawler" target="_blank" class="btn btn-primary btn-small">
                 MediaCrawler ⭐{{ origin_githubStars }}</a> 
-          进行了大幅改进；
+          进行了大幅改动；
           </p>
           <p class="section-subtitle">以"按次"爬取为数据管理理念，专门针对个人爱好者而开发前后端服务，并提供打包程序，在源项目的基础上提供更加便捷的使用方式。</p>
         </div>
@@ -143,37 +143,37 @@
         </div>
         <div class="platforms-grid">
           <div class="platform-card">
-            <div class="platform-icon">📱</div>
+            <div class="platform-icon"><i class="iconfont icon-xiaohongshu-hui" style="font-size: 36px;"></i></div>
             <h3>小红书</h3>
             <p>搜索、详情页、创作者数据采集</p>
           </div>
           <div class="platform-card">
-            <div class="platform-icon">🎵</div>
+            <div class="platform-icon"><i class="iconfont icon-douyin" style="font-size: 36px;"></i></div>
             <h3>抖音</h3>
             <p>视频搜索、详情页、创作者数据采集</p>
           </div>
           <div class="platform-card">
-            <div class="platform-icon">⚡</div>
+            <div class="platform-icon"><i class="iconfont icon-kuaishou" style="font-size: 36px;"></i></div>
             <h3>快手</h3>
             <p>视频搜索、详情页、创作者数据采集</p>
           </div>
           <div class="platform-card">
-            <div class="platform-icon">📺</div>
+            <div class="platform-icon"><i class="iconfont icon-bilibili" style="font-size: 36px;"></i></div>
             <h3>哔哩哔哩</h3>
             <p>视频搜索、详情页、UP主数据采集</p>
           </div>
           <div class="platform-card">
-            <div class="platform-icon">🐦</div>
+            <div class="platform-icon"><i class="iconfont icon-weibo" style="font-size: 36px;"></i></div>
             <h3>微博</h3>
             <p>微博搜索、详情页、用户数据采集</p>
           </div>
           <div class="platform-card">
-            <div class="platform-icon">💬</div>
+            <div class="platform-icon"><i class="iconfont icon-social-tieba" style="font-size: 36px;"></i></div>
             <h3>百度贴吧</h3>
             <p>帖子搜索、详情页数据采集</p>
           </div>
           <div class="platform-card">
-            <div class="platform-icon">🤔</div>
+            <div class="platform-icon"><i class="iconfont icon-zhihu" style="font-size: 36px;"></i></div>
             <h3>知乎</h3>
             <p>问答搜索、详情页、用户数据采集</p>
           </div>
@@ -319,24 +319,36 @@ const showTermsModal = () => {
 }
 
 // 接受当前条款
-const acceptCurrentTerm = () => {
+const acceptCurrentTerm = async () => {
   const termId = currentTerm.value.id
+  
+  // 确认当前条款
   termsStore.acceptTerm(termId)
   
   if (isLastTerm.value) {
     // 所有条款都已确认，关闭弹窗并跳转
     showTermsDialog.value = false
     ElMessage.success('所有条款已确认，正在跳转到控制台...')
-    // 确保状态更新后再跳转
-    nextTick(() => {
-      if (termsStore.allTermsAccepted) {
-        setTimeout(() => {
-          router.push('/dashboard/data-crawling')
-        }, 1000)
-      } else {
-        ElMessage.error('条款状态更新失败，请重试')
-      }
-    })
+    
+    // 等待一个tick确保状态更新完成
+    await nextTick()
+    
+    // 直接检查store的状态，不需要额外的更新调用
+    if (termsStore.allTermsAccepted) {
+      // 短暂延迟后跳转，让用户看到成功消息
+      setTimeout(() => {
+        router.push('/dashboard/data-crawling')
+      }, 800)
+    } else {
+      ElMessage.error('条款状态更新失败，请重试')
+      console.error('条款状态检查失败:', {
+        acceptedTerms: termsStore.acceptedTerms,
+        termsOfUse: termsStore.termsOfUse.map(t => t.id),
+        allTermsAccepted: termsStore.allTermsAccepted,
+        expectedLength: termsStore.termsOfUse.length,
+        actualLength: termsStore.acceptedTerms.length
+      })
+    }
   } else {
     // 显示下一个条款
     currentTermIndex.value++
@@ -419,7 +431,7 @@ onMounted(() => {
 
 .intro-page {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: linear-gradient(135deg, #ffffff 0%, #ffffff 60%, #fce7f3 80%, #fed7aa 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #ffffff 40%, #fce7f3 80%, #fed7aa 100%);
   color: var(--text-primary);
   line-height: 1.7;
   font-size: 16px;

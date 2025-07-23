@@ -15,11 +15,7 @@ from typing import List, Union
 
 import aiomysql
 
-from async_db import AsyncMysqlDB
-try:
-    from async_sqlite_db import AsyncSqliteDB
-except ImportError:
-    AsyncSqliteDB = None
+from config.db_config import AsyncMysqlDB, AsyncSqliteDB
 
 request_keyword_var: ContextVar[str] = ContextVar("request_keyword", default="")
 crawler_type_var: ContextVar[str] = ContextVar("crawler_type", default="")

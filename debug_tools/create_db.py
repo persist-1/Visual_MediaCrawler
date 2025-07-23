@@ -10,7 +10,7 @@ import os
 def create_database_from_sql():
     """根据SQL文件创建数据库"""
     # 数据库路径
-    db_path = "d:/A_work/A_trae_alter/MediaCrawler-main/data/mc_test.db"
+    db_path = "d:/A_work/A_trae_alter/MediaCrawler-main/schema/sqlite_tables.db"
     sql_file_path = "d:/A_work/A_trae_alter/MediaCrawler-main/schema/sqlite_tables.sql"
     
     # 如果数据库已存在，删除它

@@ -6,7 +6,7 @@
         <div class="status-left">
           <div class="logo-section">
             <h1 class="app-title">Visual_MediaCrawler</h1>
-            <span class="app-subtitle">可视化媒体数据采集平台(Base on "MediaCrawler")</span>
+            <span class="app-subtitle">可视化媒体数据采集平台(Based on "MediaCrawler")</span>
           </div>
         </div>
         
@@ -58,17 +58,17 @@ const menuRoutes = [
   {
     path: '/intro',
     title: '项目介绍',
-    icon: 'fas fa-home'
+    icon: 'iconfont icon-xiangmujieshao'
   },
   {
     path: '/dashboard/data-crawling',
     title: '数据爬取',
-    icon: 'fas fa-spider'
+    icon: 'iconfont icon-zhizhu'
   },
   {
     path: '/dashboard/data-show',
     title: '数据展示',
-    icon: 'fas fa-chart-bar'
+    icon: 'iconfont icon-fengfudeshujuzhanshi'
   }
 ]
 
@@ -168,7 +168,7 @@ onUnmounted(() => {
 <style scoped>
 .layout-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #ffffff 70%, #ff8a65 85%, #f48fb1 100%); /** /dashboard及其子路由页面的背景 */
   padding: 20px;
 }
 
@@ -202,7 +202,7 @@ onUnmounted(() => {
 .app-title {
   font-size: 24px;
   font-weight: 700;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #667eea, #764ba2); /** 项目标题背景 */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -218,10 +218,10 @@ onUnmounted(() => {
 .navigation-menu {
   display: flex;
   gap: 8px;
-  background: rgba(102, 126, 234, 0.1);
+  background: rgba(255, 255, 255, 0.9); /** 导航菜单背景 */
   padding: 8px;
   border-radius: 12px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  border: 1px solid rgba(43, 43, 43, 0.2);
 }
 
 .nav-item {

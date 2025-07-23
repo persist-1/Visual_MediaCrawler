@@ -12,7 +12,7 @@
 # -*- coding: utf-8 -*-
 from typing import Dict, List
 
-from db import AsyncMysqlDB
+from config.db_config import AsyncMysqlDB
 from var import media_crawler_db_var
 
 

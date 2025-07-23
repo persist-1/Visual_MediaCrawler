@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+import DataCrawler from '../views/DataCrawler.vue'
 import DataShow from '../views/DataShow.vue'
 import Intro from '../views/Intro.vue'
 import { useTermsStore } from '@/stores/terms'
@@ -21,7 +21,7 @@ const routes = [
   {
     path: '/dashboard/data-crawling',
     name: 'DataCrawling',
-    component: Home,
+    component: DataCrawler,
     meta: {
       title: '数据爬取'
     }

@@ -60,7 +60,12 @@ class BaiduTieBaClient(AbstractApiClient):
 
         """
         actual_proxies = proxies if proxies else self.default_ip_proxy
-        async with httpx.AsyncClient(proxies=actual_proxies) as client:
+        # 修复 httpx 新版本中 proxies 参数的使用方式
+        client_kwargs = {}
+        if actual_proxies:
+            client_kwargs["proxies"] = actual_proxies
+            
+        async with httpx.AsyncClient(**client_kwargs) as client:
             response = await client.request(
                 method, url, timeout=self.timeout,
                 headers=self.headers, **kwargs

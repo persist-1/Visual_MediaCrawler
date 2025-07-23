@@ -16,11 +16,7 @@
 
 from typing import Dict, List, Union
 
-from db import AsyncMysqlDB
-try:
-    from async_sqlite_db import AsyncSqliteDB
-except ImportError:
-    AsyncSqliteDB = None
+from config.db_config import AsyncMysqlDB, AsyncSqliteDB
 from var import media_crawler_db_var
 
 

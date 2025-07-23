@@ -38,8 +38,8 @@ async def parse_cmd():
                         help='''whether to crawl level one comment, supported values case insensitive ('yes', 'true', 't', 'y', '1', 'no', 'false', 'f', 'n', '0')''', default=config.ENABLE_GET_COMMENTS)
     parser.add_argument('--get_sub_comment', type=str2bool,
                         help=''''whether to crawl level two comment, supported values case insensitive ('yes', 'true', 't', 'y', '1', 'no', 'false', 'f', 'n', '0')''', default=config.ENABLE_GET_SUB_COMMENTS)
-    parser.add_argument('--sync_to_mysql', type=str2bool,
-                        help='whether to sync data to MySQL database', default=False)
+    parser.add_argument('--storage_type', type=str,
+                        help='storage type (sqlite | mysql)', choices=["sqlite", "mysql"], default="sqlite")
     parser.add_argument('--cookies', type=str,
                         help='cookies used for cookie login type', default=config.COOKIES)
     parser.add_argument('--task_id', type=str,
@@ -56,8 +56,8 @@ async def parse_cmd():
     config.KEYWORDS = args.keywords
     config.ENABLE_GET_COMMENTS = args.get_comment
     config.ENABLE_GET_SUB_COMMENTS = args.get_sub_comment
-    config.SAVE_DATA_OPTION = "db"  # 默认保存到SQLite数据库
-    config.SYNC_TO_MYSQL = args.sync_to_mysql
+    config.SAVE_DATA_OPTION = "db"  # 默认保存到数据库
+    config.DB_TYPE = args.storage_type  # 根据用户选择设置数据库类型
     config.COOKIES = args.cookies
     config.TASK_ID = args.task_id  # 设置任务ID
     

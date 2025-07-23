@@ -20,6 +20,8 @@ export default {
 <style>
 /* 引入FontAwesome图标 */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+/* 引入阿里巴巴图标库 */
+@import url('//at.alicdn.com/t/c/font_4980514_84u95jblm1l.css');
 
 * {
   margin: 0;
@@ -29,7 +31,6 @@ export default {
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f5f5;
   color: #333;
 }
 

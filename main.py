@@ -15,7 +15,7 @@ from typing import Optional
 
 import cmd_arg
 import config
-import db
+import db_init as db
 from base.base_crawler import AbstractCrawler
 from media_platform.bilibili import BilibiliCrawler
 from media_platform.douyin import DouYinCrawler

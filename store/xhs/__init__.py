@@ -26,7 +26,7 @@ from .xhs_store_impl import *
 class XhsStoreFactory:
     STORES = {
         "csv": XhsCsvStoreImplement,
-        "db": XhsHybridDbStoreImplement,
+        "db": XhsDbStoreImplement,
         "json": XhsJsonStoreImplement
     }
 

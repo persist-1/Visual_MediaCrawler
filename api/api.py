@@ -17,40 +17,87 @@ import json
 import os
 from datetime import datetime
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Query, APIRouter
+# 动态添加项目根目录到Python路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+from fastapi import HTTPException, BackgroundTasks, Query, APIRouter, Body
+from fastapi_offline import FastAPIOffline as FastAPI
 from pydantic import BaseModel, Field
 import uvicorn
-
-from extra_sqlite_api import (
-    get_sqlite_tables,
-    get_sqlite_data,
-    get_sqlite_stats,
-    export_sqlite_data,
-    export_sqlite_data_as_json,
-    get_table_configs,
-    create_task,
-    get_task,
-    update_task_status,
-    get_all_tasks,
-    delete_task as db_delete_task
-)
-from static_page_api import create_integrated_app
+try:
+    from .extra_sqlite_api import (
+        get_sqlite_tables,
+        get_sqlite_data,
+        get_sqlite_stats,
+        export_sqlite_data,
+        export_sqlite_data_as_json,
+        get_table_configs,
+        create_task,
+        get_task,
+        update_task_status,
+        get_all_tasks,
+        delete_task as db_delete_task
+    )
+    from .extra_mysql_api import (
+        get_mysql_tables,
+        get_mysql_data,
+        get_mysql_stats,
+        export_mysql_data,
+        export_mysql_data_as_json,
+        get_mysql_table_configs,
+        create_mysql_task,
+        get_mysql_task,
+        update_mysql_task_status,
+        get_all_mysql_tasks,
+        delete_mysql_task,
+        cleanup_mysql_connections
+    )
+    from .static_page_api import create_integrated_app
+except ImportError:
+    from extra_sqlite_api import (
+        get_sqlite_tables,
+        get_sqlite_data,
+        get_sqlite_stats,
+        export_sqlite_data,
+        export_sqlite_data_as_json,
+        get_table_configs,
+        create_task,
+        get_task,
+        update_task_status,
+        get_all_tasks,
+        delete_task as db_delete_task
+    )
+    from extra_mysql_api import (
+        get_mysql_tables,
+        get_mysql_data,
+        get_mysql_stats,
+        export_mysql_data,
+        export_mysql_data_as_json,
+        get_mysql_table_configs,
+        create_mysql_task,
+        get_mysql_task,
+        update_mysql_task_status,
+        get_all_mysql_tasks,
+        delete_mysql_task,
+        cleanup_mysql_connections
+    )
+    from static_page_api import create_integrated_app
 
 # 获取项目根目录
 PROJECT_ROOT = Path(__file__).parent.parent
 
 # 创建基础FastAPI应用
 base_app = FastAPI(
-    title="Visual_MediaCrawler(Base on MediaCrawler)",
+    title="Visual_MediaCrawler(Based on MediaCrawler)",
     description="可视化自媒体平台爬虫API服务",
     version="1.0.0"
 )
 
 # 创建API路由器
 api_router = APIRouter(prefix="/api")
-
-# 集成静态文件服务，创建完整的应用
-app = create_integrated_app(base_app)
 
 # 请求模型
 class CrawlerRequest(BaseModel):
@@ -98,9 +145,9 @@ class CrawlerRequest(BaseModel):
         default=None,
         description="是否爬取二级评论"
     )
-    sync_to_mysql: bool = Field(
-        default=False,
-        description="是否同步保存至MySQL数据库"
+    storage_type: Literal["sqlite", "mysql"] = Field(
+        default="sqlite",
+        description="数据存储类型选择 (sqlite | mysql)"
     )
     cookies: Optional[str] = Field(
         default=None,
@@ -138,9 +185,18 @@ async def add_task_info(task_times_id: str, request: CrawlerRequest):
         "start_page": request.start,
         "get_comment": request.get_comment,
         "get_sub_comment": request.get_sub_comment,
-        "sync_to_mysql": request.sync_to_mysql
+        "storage_type": request.storage_type
     }
-    await create_task(task_times_id, task_data)
+    
+    # 根据存储类型选择对应的数据库创建任务记录
+    if request.storage_type == "mysql":
+        try:
+            await create_mysql_task(task_times_id, task_data)
+        except Exception as e:
+            print(f"MySQL任务创建失败: {e}")
+    else:
+        # 默认使用SQLite
+        await create_task(task_times_id, task_data)
 
 def bool_to_str(value: Optional[bool]) -> Optional[str]:
     """将布尔值转换为字符串"""
@@ -188,8 +244,8 @@ def build_command(request: CrawlerRequest, task_times_id: str = None) -> list[st
     if request.get_sub_comment is not None:
         cmd.extend(["--get_sub_comment", bool_to_str(request.get_sub_comment)])
     
-    if request.sync_to_mysql:
-        cmd.extend(["--sync_to_mysql", "true"])
+    # 添加存储类型参数
+    cmd.extend(["--storage_type", request.storage_type])
     
     if request.cookies is not None:
         cmd.extend(["--cookies", request.cookies])
@@ -329,13 +385,19 @@ def _run_subprocess(command: list[str], cwd: str):
             print(f"备用编码处理也失败: {e2}")
             raise e
 
-async def run_crawler_task(task_times_id: str, command: list[str]):
+async def run_crawler_task(task_times_id: str, command: list[str], storage_type: str = "sqlite"):
     """异步执行爬虫任务"""
     try:
         print(f"异步任务 {task_times_id} 开始执行命令: {' '.join(command)}")
         
-        # 更新任务状态为运行中
-        await update_task_status(task_times_id, "running", "任务正在执行中...", None)
+        # 根据存储类型更新任务状态为运行中
+        if storage_type == "mysql":
+            try:
+                await update_mysql_task_status(task_times_id, "running", "任务正在执行中...", None)
+            except Exception as e:
+                print(f"更新MySQL任务状态失败: {e}")
+        else:
+            await update_task_status(task_times_id, "running", "任务正在执行中...", None)
         
         # 在线程池中执行命令以避免阻塞事件循环
         import concurrent.futures
@@ -358,23 +420,45 @@ async def run_crawler_task(task_times_id: str, command: list[str]):
         
         if result.returncode == 0:
             # 任务执行成功
-            await update_task_status(task_times_id, "completed", "任务执行成功", {
+            result_data = {
                 "stdout": stdout_text,
                 "stderr": stderr_text
-            })
+            }
+            # 根据存储类型更新任务状态
+            if storage_type == "mysql":
+                try:
+                    await update_mysql_task_status(task_times_id, "completed", "任务执行成功", result_data)
+                except Exception as e:
+                    print(f"MySQL任务状态更新失败: {e}")
+            else:
+                await update_task_status(task_times_id, "completed", "任务执行成功", result_data)
         else:
             # 任务执行失败
-            await update_task_status(task_times_id, "failed", f"任务执行失败，退出码: {result.returncode}", {
+            result_data = {
                 "stdout": stdout_text,
                 "stderr": stderr_text
-            })
+            }
+            # 根据存储类型更新任务状态
+            if storage_type == "mysql":
+                try:
+                    await update_mysql_task_status(task_times_id, "failed", f"任务执行失败，退出码: {result.returncode}", result_data)
+                except Exception as e:
+                    print(f"MySQL任务状态更新失败: {e}")
+            else:
+                await update_task_status(task_times_id, "failed", f"任务执行失败，退出码: {result.returncode}", result_data)
     
     except Exception as e:
         import traceback
         error_detail = f"任务执行异常: {str(e)}\n{traceback.format_exc()}"
         print(f"异步任务 {task_times_id} 异常: {error_detail}")
-        # 异常处理
-        await update_task_status(task_times_id, "failed", error_detail, None)
+        # 根据存储类型更新任务状态
+        if storage_type == "mysql":
+            try:
+                await update_mysql_task_status(task_times_id, "failed", error_detail, None)
+            except Exception as mysql_e:
+                print(f"MySQL任务状态更新失败: {mysql_e}")
+        else:
+            await update_task_status(task_times_id, "failed", error_detail, None)
 
 @api_router.get("/", summary="API根路径")
 async def root():
@@ -444,7 +528,7 @@ async def run_crawler_async(request: CrawlerRequest, background_tasks: Backgroun
         command = build_command(request, task_times_id)
         
         # 添加后台任务
-        background_tasks.add_task(run_crawler_task, task_times_id, command)
+        background_tasks.add_task(run_crawler_task, task_times_id, command, request.storage_type)
         
         return CrawlerResponse(
             success=True,
@@ -458,7 +542,16 @@ async def run_crawler_async(request: CrawlerRequest, background_tasks: Backgroun
 @api_router.get("/crawler/task/{task_times_id}", summary="查询任务状态")
 async def get_task_status(task_times_id: str):
     """查询任务状态"""
+    # 先尝试从SQLite获取任务信息
     task_info = await get_task(task_times_id)
+    
+    # 如果SQLite中没有，尝试从MySQL获取
+    if not task_info:
+        try:
+            task_info = await get_mysql_task(task_times_id)
+        except Exception:
+            task_info = None
+    
     if not task_info:
         raise HTTPException(status_code=404, detail="任务不存在")
     
@@ -477,46 +570,157 @@ async def get_task_status(task_times_id: str):
             "start": task_info.get("start_page"),
             "get_comment": task_info.get("get_comment"),
             "get_sub_comment": task_info.get("get_sub_comment"),
-            "sync_to_mysql": task_info.get("sync_to_mysql")
+            "storage_type": task_info.get("storage_type")
         }
     }
 
 @api_router.get("/crawler/tasks", summary="获取所有任务列表")
-async def get_all_tasks_api():
+async def get_all_tasks_api(database: str = Query("all", description="数据库选择 (sqlite | mysql | all)")):
     """获取所有任务列表"""
-    tasks_dict = await get_all_tasks()
-    return {
-        "tasks": [
-            {
-                "task_times_id": task_id,
-                "status": task_info["status"],
-                "message": task_info["message"],
-                "result": task_info.get("result"),
-                "created_at": task_info.get("created_at"),
-                "updated_at": task_info.get("updated_at"),
-                "formData": {
-                    "platform": task_info.get("platform"),
-                    "type": task_info.get("crawler_type"),
-                    "keywords": task_info.get("keywords"),
-                    "lt": task_info.get("login_type"),
-                    "start": task_info.get("start_page"),
-                    "get_comment": task_info.get("get_comment"),
-                    "get_sub_comment": task_info.get("get_sub_comment"),
-                    "sync_to_mysql": task_info.get("sync_to_mysql")
-                }
-            }
-            for task_id, task_info in tasks_dict.items()
-        ]
-    }
+    all_tasks = []
+    
+    if database == "mysql":
+        # 仅从MySQL获取任务
+        try:
+            mysql_tasks_result = await get_all_mysql_tasks(1, 1000)  # 获取前1000个任务
+            mysql_tasks = mysql_tasks_result.get("tasks", [])
+            for task in mysql_tasks:
+                all_tasks.append({
+                    "task_times_id": task["task_times_id"],
+                    "status": task["status"],
+                    "message": task["message"],
+                    "result": task.get("result"),
+                    "created_at": task.get("created_at"),
+                    "updated_at": task.get("updated_at"),
+                    "formData": {
+                        "platform": task.get("platform"),
+                        "type": task.get("crawler_type"),
+                        "keywords": task.get("keywords"),
+                        "lt": task.get("login_type"),
+                        "start": task.get("start_page"),
+                        "get_comment": task.get("get_comment"),
+                        "get_sub_comment": task.get("get_sub_comment"),
+                        "storage_type": task.get("storage_type", "mysql")
+                    }
+                })
+        except Exception as e:
+            print(f"获取MySQL任务失败: {e}")
+    elif database == "sqlite":
+        # 仅从SQLite获取任务
+        try:
+            sqlite_tasks_dict = await get_all_tasks()
+            for task_id, task_info in sqlite_tasks_dict.items():
+                all_tasks.append({
+                    "task_times_id": task_id,
+                    "status": task_info["status"],
+                    "message": task_info["message"],
+                    "result": task_info.get("result"),
+                    "created_at": task_info.get("created_at"),
+                    "updated_at": task_info.get("updated_at"),
+                    "formData": {
+                        "platform": task_info.get("platform"),
+                        "type": task_info.get("crawler_type"),
+                        "keywords": task_info.get("keywords"),
+                        "lt": task_info.get("login_type"),
+                        "start": task_info.get("start_page"),
+                        "get_comment": task_info.get("get_comment"),
+                        "get_sub_comment": task_info.get("get_sub_comment"),
+                        "storage_type": task_info.get("storage_type", "sqlite")
+                    }
+                })
+        except Exception as e:
+            print(f"获取SQLite任务失败: {e}")
+    else:
+        # 获取所有数据库的任务（默认行为）
+        # 获取SQLite中的任务
+        try:
+            sqlite_tasks_dict = await get_all_tasks()
+            for task_id, task_info in sqlite_tasks_dict.items():
+                all_tasks.append({
+                    "task_times_id": task_id,
+                    "status": task_info["status"],
+                    "message": task_info["message"],
+                    "result": task_info.get("result"),
+                    "created_at": task_info.get("created_at"),
+                    "updated_at": task_info.get("updated_at"),
+                    "formData": {
+                        "platform": task_info.get("platform"),
+                        "type": task_info.get("crawler_type"),
+                        "keywords": task_info.get("keywords"),
+                        "lt": task_info.get("login_type"),
+                        "start": task_info.get("start_page"),
+                        "get_comment": task_info.get("get_comment"),
+                        "get_sub_comment": task_info.get("get_sub_comment"),
+                        "storage_type": task_info.get("storage_type", "sqlite")
+                    }
+                })
+        except Exception as e:
+            print(f"获取SQLite任务失败: {e}")
+        
+        # 获取MySQL中的任务
+        try:
+            mysql_tasks_result = await get_all_mysql_tasks(1, 1000)  # 获取前1000个任务
+            mysql_tasks = mysql_tasks_result.get("tasks", [])
+            for task in mysql_tasks:
+                all_tasks.append({
+                    "task_times_id": task["task_times_id"],
+                    "status": task["status"],
+                    "message": task["message"],
+                    "result": task.get("result"),
+                    "created_at": task.get("created_at"),
+                    "updated_at": task.get("updated_at"),
+                    "formData": {
+                        "platform": task.get("platform"),
+                        "type": task.get("crawler_type"),
+                        "keywords": task.get("keywords"),
+                        "lt": task.get("login_type"),
+                        "start": task.get("start_page"),
+                        "get_comment": task.get("get_comment"),
+                        "get_sub_comment": task.get("get_sub_comment"),
+                        "storage_type": task.get("storage_type", "mysql")
+                    }
+                })
+        except Exception as e:
+            print(f"获取MySQL任务失败: {e}")
+    
+    # 按创建时间排序（最新的在前）
+    all_tasks.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+    
+    return {"tasks": all_tasks}
 
 @api_router.delete("/crawler/task/{task_times_id}", summary="删除任务记录")
 async def delete_task_api(task_times_id: str):
     """删除任务记录"""
+    # 先尝试从SQLite获取任务信息
     task_info = await get_task(task_times_id)
+    
+    # 如果SQLite中没有，尝试从MySQL获取
+    if not task_info:
+        try:
+            task_info = await get_mysql_task(task_times_id)
+        except Exception:
+            task_info = None
+    
     if not task_info:
         raise HTTPException(status_code=404, detail="任务不存在")
     
-    await db_delete_task(task_times_id)
+    # 根据存储类型删除对应数据库中的数据
+    storage_type = task_info.get("storage_type", "sqlite")
+    
+    if storage_type == "mysql":
+        try:
+            await delete_mysql_task(task_times_id)
+            print(f"已删除MySQL中任务 {task_times_id} 的相关数据")
+        except Exception as e:
+            print(f"删除MySQL数据时出错: {e}")
+            raise HTTPException(status_code=500, detail=f"删除MySQL数据失败: {e}")
+    else:
+        try:
+            await db_delete_task(task_times_id)
+            print(f"已删除SQLite中任务 {task_times_id} 的相关数据")
+        except Exception as e:
+            print(f"删除SQLite数据时出错: {e}")
+            raise HTTPException(status_code=500, detail=f"删除SQLite数据失败: {e}")
     
     return {"message": f"任务 {task_times_id} 已删除"}
 
@@ -567,13 +771,105 @@ async def api_get_table_configs():
     """获取表格配置信息"""
     return get_table_configs()
 
-# 将API路由器添加到应用
-app.include_router(api_router)
+# MySQL数据API路由
+@api_router.get("/mysql/tables", summary="获取MySQL数据表列表")
+async def api_get_mysql_tables():
+    """获取可用的MySQL数据表列表"""
+    return await get_mysql_tables()
+
+@api_router.get("/mysql/data", summary="获取MySQL表格数据")
+async def api_get_mysql_data(
+    table: str = Query(..., description="表名"),
+    page: int = Query(1, ge=1, description="页码"),
+    page_size: int = Query(30, ge=1, le=1000, description="每页数量"),
+    task_times_id: Optional[str] = Query(None, description="任务ID筛选")
+):
+    """获取MySQL表格数据"""
+    return await get_mysql_data(table, page, page_size, task_times_id)
+
+@api_router.get("/mysql/stats", summary="获取MySQL数据统计")
+async def api_get_mysql_stats():
+    """获取MySQL数据统计信息"""
+    return await get_mysql_stats()
+
+@api_router.get("/mysql/export", summary="导出MySQL表格数据")
+async def api_export_mysql_data(
+    table_name: str = Query(..., description="表名"),
+    task_id: Optional[str] = Query(None, description="任务ID筛选")
+):
+    """导出MySQL表格数据为CSV"""
+    return await export_mysql_data(table_name, task_id)
+
+@api_router.get("/mysql/export-json", summary="导出MySQL表格数据为JSON")
+async def api_export_mysql_data_json(
+    table_name: str = Query(..., description="表名"),
+    task_id: Optional[str] = Query(None, description="任务ID筛选")
+):
+    """导出MySQL表格数据为JSON"""
+    return await export_mysql_data_as_json(table_name, task_id)
+
+@api_router.get("/mysql/configs", summary="获取MySQL表格配置信息")
+async def api_get_mysql_table_configs():
+    """获取MySQL表格配置信息"""
+    return get_mysql_table_configs()
+
+# MySQL任务管理API路由
+@api_router.post("/mysql/tasks", summary="创建MySQL任务")
+async def api_create_mysql_task(
+    task_times_id: str = Query(..., description="任务ID"),
+    task_data: dict = Body(..., description="任务数据")
+):
+    """创建MySQL任务"""
+    return await create_mysql_task(task_times_id, task_data)
+
+@api_router.get("/mysql/tasks/{task_times_id}", summary="获取MySQL任务详情")
+async def api_get_mysql_task(task_times_id: str):
+    """获取MySQL任务详情"""
+    return await get_mysql_task(task_times_id)
+
+@api_router.put("/mysql/tasks/{task_times_id}/status", summary="更新MySQL任务状态")
+async def api_update_mysql_task_status(
+    task_times_id: str,
+    status: str = Body(..., description="任务状态"),
+    message: str = Body(..., description="状态消息"),
+    result: Optional[dict] = Body(None, description="任务结果")
+):
+    """更新MySQL任务状态"""
+    return await update_mysql_task_status(task_times_id, status, message, result)
+
+@api_router.get("/mysql/tasks", summary="获取所有MySQL任务")
+async def api_get_all_mysql_tasks(
+    page: int = Query(1, ge=1, description="页码"),
+    page_size: int = Query(30, ge=1, le=1000, description="每页数量")
+):
+    """获取所有MySQL任务"""
+    return await get_all_mysql_tasks(page, page_size)
+
+@api_router.delete("/mysql/tasks/{task_times_id}", summary="删除MySQL任务")
+async def api_delete_mysql_task(task_times_id: str):
+    """删除MySQL任务"""
+    return await delete_mysql_task(task_times_id)
+
+# 将API路由器添加到基础应用
+base_app.include_router(api_router)
+
+# 应用关闭时清理资源
+@base_app.on_event("shutdown")
+async def shutdown_event():
+    """应用关闭时清理资源"""
+    try:
+        await cleanup_mysql_connections()
+        print("MySQL连接已清理")
+    except Exception as e:
+        print(f"MySQL连接清理失败: {e}")
+
+# 集成静态文件服务，创建完整的应用（在API路由添加之后）
+app = create_integrated_app(base_app)
 
 if __name__ == "__main__":
     uvicorn.run(
         "api:app",
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=10001,
         reload=True,
         log_level="info"

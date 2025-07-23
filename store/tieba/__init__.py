@@ -22,7 +22,7 @@ from .tieba_store_impl import *
 class TieBaStoreFactory:
     STORES = {
         "csv": TieBaCsvStoreImplement,
-        "db": TieBaHybridDbStoreImplement,
+        "db": TieBaDbStoreImplement,
         "json": TieBaJsonStoreImplement
     }
 

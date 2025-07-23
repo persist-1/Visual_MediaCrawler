@@ -29,99 +29,19 @@ from config.db_config import SQLITE_DB_PATH
 # 数据库路径
 DB_PATH = SQLITE_DB_PATH
 
-# 数据表配置
-TABLE_CONFIGS = {
-    'bilibili_video': {
-        'name': 'B站视频',
-        'primary_key': 'video_id',
-        'time_field': 'create_time',
-        'display_fields': ['video_id', 'title', 'desc', 'nickname', 'view_count', 'like_count', 'create_time']
-    },
-    'bilibili_video_comment': {
-        'name': 'B站视频评论',
-        'primary_key': 'comment_id',
-        'time_field': 'create_time',
-        'display_fields': ['comment_id', 'video_id', 'content', 'nickname', 'like_count', 'create_time']
-    },
-    'douyin_aweme': {
-        'name': '抖音视频',
-        'primary_key': 'aweme_id',
-        'time_field': 'create_time',
-        'display_fields': ['aweme_id', 'desc', 'nickname', 'digg_count', 'comment_count', 'create_time']
-    },
-    'douyin_aweme_comment': {
-        'name': '抖音视频评论',
-        'primary_key': 'comment_id',
-        'time_field': 'create_time',
-        'display_fields': ['comment_id', 'aweme_id', 'content', 'nickname', 'digg_count', 'create_time']
-    },
-    'kuaishou_video': {
-        'name': '快手视频',
-        'primary_key': 'video_id',
-        'time_field': 'create_time',
-        'display_fields': ['video_id', 'title', 'desc', 'nickname', 'view_count', 'like_count', 'create_time']
-    },
-    'kuaishou_video_comment': {
-        'name': '快手视频评论',
-        'primary_key': 'comment_id',
-        'time_field': 'create_time',
-        'display_fields': ['comment_id', 'video_id', 'content', 'nickname', 'like_count', 'create_time']
-    },
-    'xhs_note': {
-        'name': '小红书笔记',
-        'primary_key': 'note_id',
-        'time_field': 'time',
-        'display_fields': ['note_id', 'title', 'desc', 'nickname', 'liked_count', 'collected_count', 'time']
-    },
-    'xhs_note_comment': {
-        'name': '小红书笔记评论',
-        'primary_key': 'comment_id',
-        'time_field': 'create_time',
-        'display_fields': ['comment_id', 'note_id', 'content', 'nickname', 'like_count', 'create_time']
-    },
-    'weibo_note': {
-        'name': '微博内容',
-        'primary_key': 'note_id',
-        'time_field': 'create_time',
-        'display_fields': ['note_id', 'title', 'desc', 'nickname', 'attitudes_count', 'comments_count', 'create_time']
-    },
-    'weibo_note_comment': {
-        'name': '微博评论',
-        'primary_key': 'comment_id',
-        'time_field': 'create_time',
-        'display_fields': ['comment_id', 'note_id', 'content', 'nickname', 'like_count', 'create_time']
-    },
-    'tieba_note': {
-        'name': '贴吧帖子',
-        'primary_key': 'note_id',
-        'time_field': 'publish_time',
-        'display_fields': ['note_id', 'title', 'desc', 'user_nickname', 'tieba_name', 'total_replay_num', 'publish_time']
-    },
-    'tieba_comment': {
-        'name': '贴吧评论',
-        'primary_key': 'comment_id',
-        'time_field': 'publish_time',
-        'display_fields': ['comment_id', 'note_id', 'content', 'user_nickname', 'publish_time']
-    },
-    'zhihu_content': {
-        'name': '知乎内容',
-        'primary_key': 'content_id',
-        'time_field': 'created_time',
-        'display_fields': ['content_id', 'title', 'desc', 'user_nickname', 'voteup_count', 'comment_count', 'created_time']
-    },
-    'zhihu_comment': {
-        'name': '知乎评论',
-        'primary_key': 'comment_id',
-        'time_field': 'publish_time',
-        'display_fields': ['comment_id', 'content_id', 'content', 'user_nickname', 'like_count', 'publish_time']
-    },
-    'crawler_tasks': {
-        'name': '爬虫任务',
-        'primary_key': 'task_times_id',
-        'time_field': 'created_at',
-        'display_fields': ['task_times_id', 'status', 'platform', 'crawler_type', 'keywords', 'created_at', 'updated_at']
-    }
-}
+# 导入统一的表配置模块
+from dp_op.db_tables_mapping import (
+    get_all_base_table_configs,
+    get_base_table_config,
+    is_valid_table,
+    get_table_display_name,
+    get_table_primary_key,
+    get_table_time_field,
+    get_table_display_fields
+)
+
+# 获取数据表配置
+TABLE_CONFIGS = get_all_base_table_configs()
 
 class SQLiteDataManager:
     """SQLite数据管理器"""
@@ -288,7 +208,7 @@ class SQLiteDataManager:
                 task_times_id, status, message, result_stdout, result_stderr,
                 created_at, updated_at, platform, crawler_type, keywords,
                 login_type, start_page, max_count, get_comment, get_sub_comment,
-                sync_to_mysql, specified_ids, creator_ids, cookies, save_format
+                storage_type, specified_ids, creator_ids, cookies, save_format
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
             
@@ -308,7 +228,7 @@ class SQLiteDataManager:
                 task_data.get('max_count'),
                 task_data.get('get_comment'),
                 task_data.get('get_sub_comment'),
-                1 if task_data.get('sync_to_mysql') else 0,
+                task_data.get('storage_type', 'sqlite'),
                 task_data.get('specified_ids'),
                 task_data.get('creator_ids'),
                 task_data.get('cookies'),
@@ -399,7 +319,7 @@ class SQLiteDataManager:
                 }
                 
                 # 转换布尔值
-                for bool_field in ['get_comment', 'get_sub_comment', 'sync_to_mysql']:
+                for bool_field in ['get_comment', 'get_sub_comment']:
                     if task_data.get(bool_field) is not None:
                         task_data[bool_field] = bool(task_data[bool_field])
                 
@@ -408,11 +328,63 @@ class SQLiteDataManager:
             return tasks
     
     async def delete_task(self, task_times_id: str) -> bool:
-        """删除任务"""
+        """删除任务及其关联的所有数据"""
         try:
             async with self.get_connection() as db:
+                # 定义所有包含task_times_id字段的表
+                tables_with_task_id = [
+                    'bilibili_video',
+                    'bilibili_video_comment', 
+                    'bilibili_up_info',
+                    'bilibili_contact_info',
+                    'bilibili_up_dynamic',
+                    'douyin_aweme',
+                    'douyin_aweme_comment',
+                    'dy_creator',
+                    'kuaishou_video',
+                    'kuaishou_video_comment',
+                    'weibo_note',
+                    'weibo_note_comment',
+                    'weibo_creator',
+                    'xhs_note',
+                    'xhs_note_comment',
+                    'xhs_creator',
+                    'tieba_note',
+                    'tieba_comment',
+                    'tieba_creator',
+                    'zhihu_content',
+                    'zhihu_comment',
+                    'zhihu_creator'
+                ]
+                
+                # 删除所有关联数据表中的记录
+                for table in tables_with_task_id:
+                    try:
+                        # 检查表是否存在
+                        cursor = await db.execute(
+                            "SELECT name FROM sqlite_master WHERE type='table' AND name=?", 
+                            (table,)
+                        )
+                        table_exists = await cursor.fetchone()
+                        
+                        if table_exists:
+                            # 检查表是否有task_times_id字段
+                            cursor = await db.execute(f"PRAGMA table_info({table})")
+                            columns = await cursor.fetchall()
+                            has_task_times_id = any(col[1] == 'task_times_id' for col in columns)
+                            
+                            if has_task_times_id:
+                                await db.execute(f"DELETE FROM {table} WHERE task_times_id = ?", (task_times_id,))
+                                print(f"已删除表 {table} 中task_times_id为 {task_times_id} 的记录")
+                    except Exception as table_error:
+                        print(f"删除表 {table} 中的数据时出错: {table_error}")
+                        # 继续删除其他表，不因单个表的错误而中断
+                        continue
+                
+                # 最后删除任务记录
                 await db.execute("DELETE FROM crawler_tasks WHERE task_times_id = ?", (task_times_id,))
                 await db.commit()
+                print(f"成功删除任务 {task_times_id} 及其所有关联数据")
                 return True
         except Exception as e:
             print(f"删除任务失败: {e}")

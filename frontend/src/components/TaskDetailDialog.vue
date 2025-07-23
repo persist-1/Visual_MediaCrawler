@@ -91,8 +91,8 @@
             </span>
           </div>
           <div class="config-item">
-            <label>保存格式:</label>
-            <span class="save-format">{{ getSaveOptionName(currentTask.formData.save_data_option) }}</span>
+            <label>存储类型:</label>
+            <span class="save-format">{{ getStorageTypeName(currentTask.formData.storage_type) }}</span>
           </div>
         </div>
       </div>
@@ -289,6 +289,15 @@ const getLoginTypeName = (type) => {
 const getSaveOptionName = (option) => {
   const optionObj = SAVE_OPTIONS.find(o => o.value === option)
   return optionObj?.label || option
+}
+
+const getStorageTypeName = (storageType) => {
+  // 使用新的storage_type字段
+  switch (storageType) {
+    case 'mysql': return 'MySQL数据库'
+    case 'sqlite': return 'SQLite数据库'
+    default: return 'SQLite数据库'
+  }
 }
 
 const formatTime = (timeStr) => {

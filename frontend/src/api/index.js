@@ -57,7 +57,7 @@ export const crawlerAPI = {
   getTaskStatus: (taskId) => api.get(`/crawler/task/${taskId}`),
   
   // 获取所有任务
-  getAllTasks: () => api.get('/crawler/tasks'),
+  getAllTasks: (database = 'sqlite') => api.get(`/crawler/tasks?database=${database}`),
   
   // 删除任务
   deleteTask: (taskId) => api.delete(`/crawler/task/${taskId}`)
@@ -74,13 +74,13 @@ export const systemAPI = {
 
 // 平台选项
 export const PLATFORMS = [
-  { value: 'xhs', label: '小红书', icon: 'fab fa-instagram' },
-  { value: 'dy', label: '抖音', icon: 'fab fa-tiktok' },
-  { value: 'ks', label: '快手', icon: 'fas fa-video' },
-  { value: 'bili', label: '哔哩哔哩', icon: 'fab fa-bilibili' },
-  { value: 'wb', label: '微博', icon: 'fab fa-weibo' },
-  { value: 'tieba', label: '贴吧', icon: 'fas fa-comments' },
-  { value: 'zhihu', label: '知乎', icon: 'fab fa-zhihu' }
+  { value: 'xhs', label: '小红书', icon: 'iconfont icon-xiaohongshu-hui' },
+  { value: 'dy', label: '抖音', icon: 'iconfont icon-douyin' },
+  { value: 'ks', label: '快手', icon: 'iconfont icon-kuaishou' },
+  { value: 'bili', label: '哔哩哔哩', icon: 'iconfont icon-bilibili' },
+  { value: 'wb', label: '微博', icon: 'iconfont icon-weibo' },
+  { value: 'tieba', label: '贴吧', icon: 'iconfont icon-social-tieba' },
+  { value: 'zhihu', label: '知乎', icon: 'iconfont icon-zhihu' }
 ]
 
 // 平台格式样例

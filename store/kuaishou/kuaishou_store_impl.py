@@ -158,80 +158,8 @@ class KuaishouDbStoreImplement(AbstractStore):
             await update_comment_by_comment_id(comment_id, comment_item=comment_item)
 
 
-class KuaishouHybridDbStoreImplement(AbstractStore):
-    """
-    Kuaishou混合数据库存储实现类
-    同时保存到SQLite和MySQL数据库
-    """
-    
-    def __init__(self):
-        self.sqlite_store = KuaishouDbStoreImplement()
-        self.mysql_store = None
-        
-    async def _get_mysql_store(self):
-        """获取MySQL存储实例"""
-        if self.mysql_store is None:
-            # 临时切换到MySQL配置
-            import config
-            original_db_type = config.DB_TYPE
-            config.DB_TYPE = 'mysql'
-            
-            # 初始化MySQL连接
-            from db import init_mediacrawler_db
-            await init_mediacrawler_db()
-            
-            # 创建MySQL存储实例
-            self.mysql_store = KuaishouDbStoreImplement()
-            
-            # 恢复原始配置
-            config.DB_TYPE = original_db_type
-            
-        return self.mysql_store
-    
-    async def store_content(self, content_item: Dict):
-        """
-        同时保存内容到SQLite和MySQL数据库
-        """
-        # 保存到SQLite（默认）
-        await self.sqlite_store.store_content(content_item)
-        
-        # 如果启用MySQL同步，也保存到MySQL
-        if getattr(config, 'SYNC_TO_MYSQL', False):
-            try:
-                mysql_store = await self._get_mysql_store()
-                await mysql_store.store_content(content_item)
-            except Exception as e:
-                utils.logger.warning(f"Failed to sync content to MySQL: {e}")
-    
-    async def store_comment(self, comment_item: Dict):
-        """
-        同时保存评论到SQLite和MySQL数据库
-        """
-        # 保存到SQLite（默认）
-        await self.sqlite_store.store_comment(comment_item)
-        
-        # 如果启用MySQL同步，也保存到MySQL
-        if getattr(config, 'SYNC_TO_MYSQL', False):
-            try:
-                mysql_store = await self._get_mysql_store()
-                await mysql_store.store_comment(comment_item)
-            except Exception as e:
-                utils.logger.warning(f"Failed to sync comment to MySQL: {e}")
-    
-    async def store_creator(self, creator: Dict):
-        """
-        同时保存创作者信息到SQLite和MySQL数据库
-        """
-        # 保存到SQLite（默认）
-        await self.sqlite_store.store_creator(creator)
-        
-        # 如果启用MySQL同步，也保存到MySQL
-        if getattr(config, 'SYNC_TO_MYSQL', False):
-            try:
-                mysql_store = await self._get_mysql_store()
-                await mysql_store.store_creator(creator)
-            except Exception as e:
-                utils.logger.warning(f"Failed to sync creator to MySQL: {e}")
+# KuaishouHybridDbStoreImplement类已废弃，因为sync_to_mysql机制已被storage_type参数替代
+# 现在通过DB_TYPE配置直接选择使用SQLite或MySQL，不再需要混合存储
 
 
 class KuaishouJsonStoreImplement(AbstractStore):

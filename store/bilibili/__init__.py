@@ -26,7 +26,7 @@ from .bilibilli_store_video import *
 class BiliStoreFactory:
     STORES = {
         "csv": BiliCsvStoreImplement,
-        "db": BiliHybridDbStoreImplement,  # 使用混合存储类，支持SQLite+MySQL同步
+        "db": BiliDbStoreImplement,
         "json": BiliJsonStoreImplement,
     }
 

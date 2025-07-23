@@ -24,7 +24,7 @@ from .douyin_store_impl import *
 class DouyinStoreFactory:
     STORES = {
         "csv": DouyinCsvStoreImplement,
-        "db": DouyinHybridDbStoreImplement,
+        "db": DouyinDbStoreImplement,
         "json": DouyinJsonStoreImplement,
     }
 

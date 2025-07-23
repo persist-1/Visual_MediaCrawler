@@ -30,7 +30,7 @@ export const useCrawlerStore = defineStore('crawler', {
         creator_ids: '',
         get_comment: false,
         get_sub_comment: false,
-        sync_to_mysql: false,
+        storage_type: 'sqlite',
         cookies: ''
       }
   }),
@@ -135,10 +135,10 @@ export const useCrawlerStore = defineStore('crawler', {
     },
 
     // 获取所有任务
-    async getAllTasks() {
+    async getAllTasks(database = 'sqlite') {
       this.loading.tasks = true
       try {
-        const response = await crawlerAPI.getAllTasks()
+        const response = await crawlerAPI.getAllTasks(database)
         // 直接使用服务器返回的任务数据
         const serverTasks = response.tasks || []
         
@@ -208,7 +208,7 @@ export const useCrawlerStore = defineStore('crawler', {
         creator_ids: '',
         get_comment: false,
         get_sub_comment: false,
-        sync_to_mysql: false,
+        storage_type: 'sqlite',
         cookies: ''
       }
     },

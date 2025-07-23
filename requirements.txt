@@ -5,6 +5,7 @@ playwright==1.45.0
 tenacity==8.2.2
 opencv-python
 aiomysql==0.2.0
+cryptography>=3.4.8
 redis~=4.6.0
 pydantic==2.5.2
 aiofiles~=23.2.1

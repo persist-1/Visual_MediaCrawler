@@ -172,3 +172,5 @@ cython_debug/
 docs/.vitepress/cache
 
 packing
+.docs
+.github

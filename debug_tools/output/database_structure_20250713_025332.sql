@@ -158,7 +158,7 @@ CREATE TABLE `crawler_tasks` (
     `max_count` INTEGER DEFAULT NULL,
     `get_comment` INTEGER DEFAULT NULL,
     `get_sub_comment` INTEGER DEFAULT NULL,
-    `sync_to_mysql` INTEGER DEFAULT 0,
+    `storage_type` TEXT DEFAULT 'sqlite', -- 替代了原来的sync_to_mysql字段
     `specified_ids` TEXT DEFAULT NULL,
     `creator_ids` TEXT DEFAULT NULL,
     `cookies` TEXT DEFAULT NULL,

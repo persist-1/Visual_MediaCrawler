@@ -96,7 +96,12 @@ class XiaoHongShuClient(AbstractApiClient):
         # return response.text
         return_response = kwargs.pop("return_response", False)
 
-        async with httpx.AsyncClient(proxies=self.proxies) as client:
+        # 修复 httpx 新版本中 proxies 参数的使用方式
+        client_kwargs = {}
+        if self.proxies:
+            client_kwargs["proxies"] = self.proxies
+            
+        async with httpx.AsyncClient(**client_kwargs) as client:
             response = await client.request(method, url, timeout=self.timeout, **kwargs)
 
         if response.status_code == 471 or response.status_code == 461:
@@ -156,7 +161,12 @@ class XiaoHongShuClient(AbstractApiClient):
         )
 
     async def get_note_media(self, url: str) -> Union[bytes, None]:
-        async with httpx.AsyncClient(proxies=self.proxies) as client:
+        # 修复 httpx 新版本中 proxies 参数的使用方式
+        client_kwargs = {}
+        if self.proxies:
+            client_kwargs["proxies"] = self.proxies
+            
+        async with httpx.AsyncClient(**client_kwargs) as client:
             response = await client.request("GET", url, timeout=self.timeout)
             if not response.reason_phrase == "OK":
                 utils.logger.error(

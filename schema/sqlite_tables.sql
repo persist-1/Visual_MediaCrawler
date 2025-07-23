@@ -276,6 +276,8 @@ CREATE TABLE `kuaishou_video_comment`
     `content`           TEXT,
     `create_time`       INTEGER NOT NULL,
     `sub_comment_count` TEXT NOT NULL,
+    `parent_comment_id` TEXT DEFAULT NULL,
+    `like_count`        TEXT NOT NULL DEFAULT '0',
     `task_times_id`     TEXT DEFAULT NULL
 );
 
@@ -654,7 +656,7 @@ CREATE TABLE `crawler_tasks` (
     `max_count` INTEGER DEFAULT NULL,
     `get_comment` INTEGER DEFAULT NULL,
     `get_sub_comment` INTEGER DEFAULT NULL,
-    `sync_to_mysql` INTEGER DEFAULT 0,
+    `storage_type` TEXT DEFAULT 'sqlite',
     `specified_ids` TEXT DEFAULT NULL,
     `creator_ids` TEXT DEFAULT NULL,
     `cookies` TEXT DEFAULT NULL,

@@ -24,7 +24,7 @@ from .kuaishou_store_impl import *
 class KuaishouStoreFactory:
     STORES = {
         "csv": KuaishouCsvStoreImplement,
-        "db": KuaishouHybridDbStoreImplement,
+        "db": KuaishouDbStoreImplement,
         "json": KuaishouJsonStoreImplement
     }
 

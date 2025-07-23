@@ -48,7 +48,12 @@ class BilibiliClient(AbstractApiClient):
         self.cookie_dict = cookie_dict
 
     async def request(self, method, url, **kwargs) -> Any:
-        async with httpx.AsyncClient(proxies=self.proxies) as client:
+        # 修复 httpx 新版本中 proxies 参数的使用方式
+        client_kwargs = {}
+        if self.proxies:
+            client_kwargs["proxies"] = self.proxies
+        
+        async with httpx.AsyncClient(**client_kwargs) as client:
             response = await client.request(
                 method, url, timeout=self.timeout,
                 **kwargs
@@ -193,7 +198,12 @@ class BilibiliClient(AbstractApiClient):
         return await self.get(uri, params, enable_params_sign=True)
 
     async def get_video_media(self, url: str) -> Union[bytes, None]:
-        async with httpx.AsyncClient(proxies=self.proxies) as client:
+        # 修复 httpx 新版本中 proxies 参数的使用方式
+        client_kwargs = {}
+        if self.proxies:
+            client_kwargs["proxies"] = self.proxies
+            
+        async with httpx.AsyncClient(**client_kwargs) as client:
             response = await client.request("GET", url, timeout=self.timeout, headers=self.headers)
             if not response.reason_phrase == "OK":
                 utils.logger.error(f"[BilibiliClient.get_video_media] request {url} err, res:{response.text}")

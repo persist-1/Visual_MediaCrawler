@@ -1,0 +1,36 @@
+# 示例任务ID文件
+# 用于测试批量删除功能
+# 
+# 使用方法:
+#   python batch_delete_tasks.py --db sqlite --file example_task_ids.txt --preview
+#
+# 文件格式说明:
+#   - 每行一个task_times_id
+#   - 以#开头的行为注释，会被忽略
+#   - 空行会被忽略
+#   - 支持任意格式的task_times_id
+
+# 以下是一些示例任务ID（请替换为实际的任务ID）
+# 20240101_123456
+# 20240102_234567
+# 20240103_345678
+
+# 抖音爬取任务示例
+# douyin_20240115_101530
+# douyin_20240115_143022
+
+# B站爬取任务示例
+# bilibili_20240116_092145
+# bilibili_20240116_165533
+
+# 小红书爬取任务示例
+# xhs_20240117_084412
+# xhs_20240117_201847
+
+# 注意事项:
+# 1. 请确保这些任务ID确实存在于数据库中
+# 2. 建议先使用 --preview 模式查看影响范围
+# 3. 删除操作不可逆，请谨慎操作
+# 4. 可以通过以下SQL查询获取现有的任务ID:
+#    SQLite: SELECT task_times_id FROM crawler_tasks;
+#    MySQL:  SELECT task_times_id FROM crawler_tasks;

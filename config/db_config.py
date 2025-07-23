@@ -12,11 +12,11 @@
 import os
 
 # mysql config
-RELATION_DB_PWD = os.getenv("RELATION_DB_PWD", "123456")
-RELATION_DB_USER = os.getenv("RELATION_DB_USER", "root")
-RELATION_DB_HOST = os.getenv("RELATION_DB_HOST", "localhost")
-RELATION_DB_PORT = os.getenv("RELATION_DB_PORT", 3306)
-RELATION_DB_NAME = os.getenv("RELATION_DB_NAME", "media_crawler")
+MYSQL_DB_PWD = os.getenv("MYSQL_DB_PWD", " ")
+MYSQL_DB_USER = os.getenv("MYSQL_DB_USER", "root")
+MYSQL_DB_HOST = os.getenv("MYSQL_DB_HOST", "localhost")
+MYSQL_DB_PORT = os.getenv("MYSQL_DB_PORT", 3306)
+MYSQL_DB_NAME = os.getenv("MYSQL_DB_NAME", "visual_mediacrawler")
 
 
 # redis config
@@ -32,6 +32,13 @@ CACHE_TYPE_MEMORY = "memory"
 # sqlite3 config
 SQLITE_DB_PATH = os.getenv("SQLITE_DB_PATH", os.path.join(os.path.dirname(os.path.dirname(__file__)), "schema", "sqlite_tables.db"))
 
-# database type
-DB_TYPE_MYSQL = "mysql"
-DB_TYPE_SQLITE = "sqlite"
+# database operation modules
+from dp_op import AsyncMysqlDB, AsyncSqliteDB
+
+__all__ = [
+    'MYSQL_DB_PWD', 'MYSQL_DB_USER', 'MYSQL_DB_HOST', 'MYSQL_DB_PORT', 'MYSQL_DB_NAME',
+    'REDIS_DB_HOST', 'REDIS_DB_PWD', 'REDIS_DB_PORT', 'REDIS_DB_NUM',
+    'CACHE_TYPE_REDIS', 'CACHE_TYPE_MEMORY',
+    'SQLITE_DB_PATH',
+    'AsyncMysqlDB', 'AsyncSqliteDB'
+]
