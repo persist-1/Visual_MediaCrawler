@@ -168,8 +168,25 @@ export const useTermsStore = defineStore('terms', {
         const savedState = localStorage.getItem('visual_mediacrawler_terms')
         if (savedState) {
           const parsed = JSON.parse(savedState)
-          this.acceptedTerms = parsed.acceptedTerms || []
+          const rawAcceptedTerms = parsed.acceptedTerms || []
+          
+          // 数据清理：只保留有效的条款ID，去除重复项
+          const validTermIds = this.termsOfUse.map(term => term.id)
+          this.acceptedTerms = [...new Set(rawAcceptedTerms)].filter(termId => 
+            validTermIds.includes(termId)
+          )
+          
           this.termsAccepted = this.allTermsAccepted
+          
+          // 如果清理后的数据与原数据不同，重新保存
+          if (this.acceptedTerms.length !== rawAcceptedTerms.length || 
+              !rawAcceptedTerms.every(id => this.acceptedTerms.includes(id))) {
+            console.log('检测到无效条款数据，已自动清理:', {
+              原始数据: rawAcceptedTerms,
+              清理后数据: this.acceptedTerms
+            })
+            this.saveTermsState()
+          }
         }
       } catch (error) {
         console.error('读取条款状态失败:', error)
@@ -179,6 +196,13 @@ export const useTermsStore = defineStore('terms', {
     
     // 确认单个条款
     acceptTerm(termId) {
+      // 检查条款ID是否有效
+      const validTermIds = this.termsOfUse.map(term => term.id)
+      if (!validTermIds.includes(termId)) {
+        console.warn('尝试确认无效的条款ID:', termId)
+        return
+      }
+      
       if (!this.acceptedTerms.includes(termId)) {
         this.acceptedTerms.push(termId)
         this.updateTermsAccepted()
@@ -204,9 +228,27 @@ export const useTermsStore = defineStore('terms', {
     
     // 确认所有条款
     acceptAllTerms() {
+      // 确保只包含有效的条款ID
       this.acceptedTerms = this.termsOfUse.map(term => term.id)
       this.saveTermsState()
       this.updateTermsAccepted()
+    },
+    
+    // 清理已确认条款数据（移除无效和重复的条款ID）
+    cleanAcceptedTerms() {
+      const validTermIds = this.termsOfUse.map(term => term.id)
+      const originalLength = this.acceptedTerms.length
+      
+      // 去重并过滤无效ID
+      this.acceptedTerms = [...new Set(this.acceptedTerms)].filter(termId => 
+        validTermIds.includes(termId)
+      )
+      
+      if (this.acceptedTerms.length !== originalLength) {
+        console.log('清理了无效的条款确认数据')
+        this.saveTermsState()
+        this.updateTermsAccepted()
+      }
     },
     
     // 重置所有条款状态

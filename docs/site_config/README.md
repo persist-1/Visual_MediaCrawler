@@ -1,4 +1,5 @@
-# 👁️Visual_MediaCrawler - 可视化自媒体平台爬虫（Based on "MediaCrawler")🕷️
+# 👁️Visual_MediaCrawler - 可视化自媒体平台爬虫
+## （基于 [MediaCrawler](https://github.com/NanmiCoder/MediaCrawler) 项目进行改动）🕷️
 
 <div align="center">
 
@@ -34,6 +35,21 @@
    - `--storage_type`：将爬取数据保存至SQLite或MySQL数据库
 
 声明：本项目改动部分的代码，70%+通过AI编程实现，其中存在未完全Review的部分，若在使用中出现问题请提交ISSUES，开发者会积极解决
+
+- **项目前端页面预览地址** [https://visual-mediacrawler.pages.dev/](https://visual-mediacrawler.pages.dev/)
+
+- **项目在线文档地址** [https://persist-1.github.io/Visual_MediaCrawler/](https://persist-1.github.io/Visual_MediaCrawler/)
+
+## 😶‍🌫️ 前端展示
+### 🕷️ 数据爬取页面
+<div align="center">
+  <img src="./static/images/page-数据爬取1.png" alt="数据爬取页面1" width=100%>
+</div>
+
+### 📊 数据展示页面
+<div align="center">
+  <img src="./static/images/page-数据展示1.png" alt="数据展示页面1" width=100%>
+</div>
 
 ### 🦄 支持的平台
 

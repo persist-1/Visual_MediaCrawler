@@ -7,17 +7,20 @@ hero:
   text: "可视化媒体爬虫"
   tagline: 支持：哔哩哔哩 | 抖音 | 小红书 | 贴吧 | 微博 | 知乎 | 快手；根据：关键词 | 详情页 | 创作者 进行爬取 （Based on 'MediaCrawler')
   image:
-    src: /Visual_MediaCrawler/static/images/logo1.svg
+    src: ./static/images/logo1.svg
     alt: Visual_MediaCrawler
   actions:
     - theme: brand
       text: 使用说明
       link: /1.使用说明
+    - theme: brand
+      text: 前端展示
+      link: https://visual-mediacrawler-frontend.pages.dev/ 
     - theme: alt
       text: 免责声明
       link: /7.项目免责声明
     - theme: alt
-      text: 源项目"MediaCrawler""
+      text: 源项目"MediaCrawler"
       link: https://github.com/NanmiCoder/MediaCrawler
 
 features:

@@ -292,7 +292,7 @@ const fetchOriginGitHubStars = async () => {
 // 获取 --本项目-- GitHub Stars数量
 const fetchGitHubStars = async () => {
   try {
-    const response = await fetch('https://api.github.com/repos/NanmiCoder/MediaCrawler')
+    const response = await fetch('https:///api.github.com/repos/persist-1/Visual_MediaCrawler')
     const data = await response.json()
     const stars = data.stargazers_count
     

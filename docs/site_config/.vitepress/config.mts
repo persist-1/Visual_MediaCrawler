@@ -16,7 +16,7 @@ export default defineConfig({
 
   themeConfig: {
 
-    logo: '/Visual_MediaCrawler/static/images/logo.svg',
+    logo: './static/images/logo1.svg',
     siteTitle: 'Visual_MediaCrawler | 项目文档',
 
     // https://vitepress.dev/reference/default-theme-config

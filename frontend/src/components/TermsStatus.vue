@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTermsStore } from '@/stores/terms'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -88,9 +88,18 @@ const showTermsDialog = ref(false)
 
 // 计算属性
 const allTermsAccepted = computed(() => termsStore.allTermsAccepted)
-const acceptedTerms = computed(() => termsStore.acceptedTerms)
+const acceptedTerms = computed(() => {
+  // 确保返回的是有效的条款数组，防止显示异常数据
+  const validTermIds = termsStore.termsOfUse.map(term => term.id)
+  return termsStore.acceptedTerms.filter(termId => validTermIds.includes(termId))
+})
 const unacceptedTerms = computed(() => termsStore.unacceptedTerms)
 const termsOfUse = computed(() => termsStore.termsOfUse)
+
+// 组件挂载时清理数据
+onMounted(() => {
+  termsStore.cleanAcceptedTerms()
+})
 
 // 方法
 const isTermAccepted = (termId) => {
