@@ -7,7 +7,7 @@ hero:
   text: "可视化媒体爬虫"
   tagline: 支持：哔哩哔哩 | 抖音 | 小红书 | 贴吧 | 微博 | 知乎 | 快手；根据：关键词 | 详情页 | 创作者 进行爬取 （Based on 'MediaCrawler')
   image:
-    src: /Visual_MediaCrawler/assets/logo1.CHXJ8TOt.svg
+    src: /assets/logo1.CHXJ8TOt.svg
     alt: Visual_MediaCrawler
   actions:
     - theme: brand
