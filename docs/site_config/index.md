@@ -7,8 +7,9 @@ hero:
   text: "可视化媒体爬虫"
   tagline: 支持：哔哩哔哩 | 抖音 | 小红书 | 贴吧 | 微博 | 知乎 | 快手；根据：关键词 | 详情页 | 创作者 进行爬取 （Based on 'MediaCrawler')
   image:
-    src: ./public/images/logo1.svg
+    src: ./images/logo1.svg
     alt: Visual_MediaCrawler
+    # 打包时路径为images，不再使用public/images，不知道为什么index页面和其它md页面的打包逻辑不一样...
   actions:
     - theme: brand
       text: 使用说明
