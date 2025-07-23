@@ -50,10 +50,14 @@ jobs:
         run: |
           cd docs
           npm run docs:build
+      - name: Copy build output to docs root
+        run: |
+          cp -r docs/site_config/.vitepress/dist/* docs/
+          ls -la docs/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/site_config/.vitepress/dist
+          path: docs
 
   # 部署工作
   deploy:
