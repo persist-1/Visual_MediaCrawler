@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Visual_MediaCrawler",
   description: "可视化爬虫（支持：哔哩哔哩 | 抖音 | 小红书 | 贴吧 | 微博 | 知乎 | 快手），异步、高效、直观地采集国内主流平台的媒体数据的前后端一体项目（Based on \"MediaCrawler\"）。",
+  base: '/Visual_MediaCrawler/',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
