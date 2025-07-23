@@ -3,7 +3,7 @@
 
 <div align="center">
 
-<img src="./docs/site_config/static/images/logo1.svg">
+<img src="./docs/site_config/public/images/logo1.svg">
 
 [![GitHub Stars](https://img.shields.io/github/stars/persist-1/Visual_MediaCrawler?style=social)](https://github.com/persist-1/Visual_MediaCrawler/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/persist-1/Visual_MediaCrawler?style=social)](https://github.com/persist-1/Visual_MediaCrawler/network/members)
@@ -43,12 +43,12 @@
 ## 😶‍🌫️ 前端展示
 ### 🕷️ 数据爬取页面
 <div align="center">
-  <img src="./docs/site_config/static/images/page-数据爬取1.png" alt="数据爬取页面1" width="400">
+  <img src="./docs/site_config/public/images/page-数据爬取1.png" alt="数据爬取页面1" width=100%>
 </div>
 
 ### 📊 数据展示页面
 <div align="center">
-  <img src="./docs/site_config/static/images/page-数据展示1.png" alt="数据展示页面1" width="400">
+  <img src="./docs/site_config/public/images/page-数据展示1.png" alt="数据展示页面1" width=100%>
 </div>
 
 ### 🦄 支持的平台

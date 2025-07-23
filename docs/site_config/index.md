@@ -7,7 +7,7 @@ hero:
   text: "可视化媒体爬虫"
   tagline: 支持：哔哩哔哩 | 抖音 | 小红书 | 贴吧 | 微博 | 知乎 | 快手；根据：关键词 | 详情页 | 创作者 进行爬取 （Based on 'MediaCrawler')
   image:
-    src: /assets/logo1.CHXJ8TOt.svg
+    src: ./public/images/logo1.svg
     alt: Visual_MediaCrawler
   actions:
     - theme: brand
@@ -36,5 +36,8 @@ features:
   - icon: 🖥️
     title: 直观的用户界面
     details: 构建了前端服务，提供了 "数据爬取" 和 "数据展示" 两个核心界面，使得操作更加便捷直观，充分对齐了项目的核心功能，提升了用户体验。
+  - icon: 🤖
+    title: AI开发
+    details: 70%+的改动代码是通过AI编程实现的，包括但不限于：数据爬取、数据清洗、数据存储、数据展示等。
 ---
 

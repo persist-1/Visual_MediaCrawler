@@ -170,7 +170,7 @@ cython_debug/
 .vscode
 /node_modules
 
-
+docs/node_modules/
 docs/site_config/.vitepress/cache
 docs/site_config/.vitepress/dist
 frontend/node_modules

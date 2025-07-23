@@ -11,12 +11,12 @@ export default defineConfig({
 
   head: [
       // 添加图标
-      ['link', { rel: 'icon', type: 'image/svg+xml', href: './static/images/logo.svg' }]
+      ['link', { rel: 'icon', type: 'image/svg+xml', href: '/images/logo.svg' }]
     ],
 
   themeConfig: {
 
-    logo: './static/images/logo1.svg',
+    logo: '/images/logo1.svg',
     siteTitle: 'Visual_MediaCrawler | 项目文档',
 
     // https://vitepress.dev/reference/default-theme-config
