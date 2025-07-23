@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="./static/images/logo1.svg">
+<img src="https://persist-1.github.io/Visual_MediaCrawler/static/images/logo1.svg">
 
 [![GitHub Stars](https://img.shields.io/github/stars/persist-1/Visual_MediaCrawler?style=social)](https://github.com/persist-1/Visual_MediaCrawler/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/persist-1/Visual_MediaCrawler?style=social)](https://github.com/persist-1/Visual_MediaCrawler/network/members)
