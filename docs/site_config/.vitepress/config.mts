@@ -11,7 +11,7 @@ export default defineConfig({
 
   head: [
       // 添加图标
-      ['link', { rel: 'icon', type: 'image/svg+xml', href: '/Visual_MediaCrawler/static/images/logo.svg' }]
+      ['link', { rel: 'icon', type: 'image/svg+xml', href: '/static/images/logo.svg' }]
     ],
 
   themeConfig: {
