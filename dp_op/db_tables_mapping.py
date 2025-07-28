@@ -48,7 +48,7 @@ BASE_TABLE_CONFIGS = {
         'name': '抖音视频',
         'primary_key': 'aweme_id',
         'time_field': 'create_time',
-        'display_fields': ['aweme_id', 'desc', 'nickname', 'digg_count', 'comment_count', 'create_time']
+        'display_fields': ['aweme_id', 'desc', 'nickname', 'digg_count', 'comment_count', 'music_download_url', 'create_time']
     },
     'douyin_aweme_comment': {
         'name': '抖音视频评论',
@@ -183,7 +183,8 @@ DETAILED_TABLE_CONFIGS = {
             {"key": "tag_list", "title": "标签列表", "width": 200},
             {"key": "aweme_url", "title": "视频链接", "width": 200},
             {"key": "video_url_list", "title": "视频地址列表", "width": 300},
-            {"key": "video_cover_url_list", "title": "视频封面列表", "width": 300},
+            {"key": "cover_url", "title": "视频封面列表", "width": 300},
+            {"key": "music_download_url", "title": "背景音乐下载链接", "width": 200},
             {"key": "note_url", "title": "笔记链接", "width": 200},
             {"key": "task_times_id", "title": "任务ID", "width": 200},
             {"key": "add_ts", "title": "添加时间戳", "width": 150}

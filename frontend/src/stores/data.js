@@ -136,6 +136,7 @@ const TABLE_CONFIG = {
       { prop: 'aweme_url', label: '视频链接', width: '200' },
       { prop: 'cover_url', label: '封面链接', width: '200' },
       { prop: 'video_download_url', label: '下载链接', width: '200' },
+      { prop: 'music_download_url', label: '背景音乐下载链接', width: '200' },
       { prop: 'source_keyword', label: '搜索关键词', width: '150' },
       { prop: 'task_times_id', label: '任务ID', width: '200' },
       { prop: 'add_ts', label: '添加时间', width: '150' },

@@ -165,6 +165,7 @@ CREATE TABLE `douyin_aweme`
     `aweme_url`       TEXT DEFAULT NULL,
     `cover_url`       TEXT DEFAULT NULL,
     `video_download_url` TEXT DEFAULT NULL,
+    `music_download_url` TEXT DEFAULT NULL,
     `source_keyword`  TEXT DEFAULT '',
     `task_times_id`   TEXT DEFAULT NULL
 );

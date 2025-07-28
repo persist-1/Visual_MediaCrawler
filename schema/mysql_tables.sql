@@ -162,6 +162,7 @@ CREATE TABLE `douyin_aweme`
     `aweme_url`       varchar(255) DEFAULT NULL COMMENT '视频详情页URL',
     `cover_url`       varchar(500) DEFAULT NULL COMMENT '视频封面图URL',
     `video_download_url` varchar(1024) DEFAULT NULL COMMENT '视频下载地址',
+    `music_download_url` varchar(1024) DEFAULT NULL COMMENT '音乐下载地址',
     `source_keyword`  varchar(255) DEFAULT '' COMMENT '搜索来源关键字',
     `task_times_id`   varchar(64)  DEFAULT NULL COMMENT '任务时间ID',
     PRIMARY KEY (`id`),
