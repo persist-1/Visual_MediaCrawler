@@ -169,6 +169,7 @@ cython_debug/
 */.DS_Store
 .vscode
 /node_modules
+node_modules
 
 docs/node_modules/
 docs/site_config/.vitepress/cache
